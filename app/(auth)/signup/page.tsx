@@ -34,8 +34,8 @@ const SignUp = () => {
       <div>
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold ">Sign Up Account</h2>
-          <p className="mt-2">
-            Enter your personal data to create your account.
+          <p className="mt-2 text-md">
+            Enter your Information to create your account.
           </p>
         </div>
 
@@ -66,15 +66,7 @@ const SignUp = () => {
             <span className="">Google</span>
           </Button>
 
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 h-auto"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
-            </svg>
-            <span className="">GitHub</span>
-          </Button>
+        
         </div>
 
         <div className="relative my-6">
