@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
@@ -46,7 +47,9 @@ export default function RootLayout({
          <main className="w-full min-h-screen">
         <div className="">
            
-              {children}
+             <TooltipProvider>
+               {children}
+             </TooltipProvider>
            
         </div>
        </main>
