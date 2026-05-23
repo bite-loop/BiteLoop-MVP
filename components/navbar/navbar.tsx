@@ -36,7 +36,8 @@ export default function Navbar() {
         </div>
 
         {/* Center Logo */}
-        <div className="absolute left-1/2 flex -translate-x-1/2 flex-col items-center">
+       <Link href={"/"} className="cursor-pointer absolute left-1/2 flex -translate-x-1/2 flex-col items-center">
+        
           <div className="relative h-10 w-10 md:h-32 md:w-32">
             <Image
               src={LOGOS.DARK}
@@ -45,7 +46,8 @@ export default function Navbar() {
               className="object-contain  "
             />
           </div>
-        </div>
+       
+       </Link>
 
         {/* Right Side */}
         <div className="ml-auto flex items-center gap-4">

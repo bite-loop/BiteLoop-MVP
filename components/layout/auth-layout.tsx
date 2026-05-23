@@ -16,6 +16,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Logo at the top */}
+       <Link className='cursor-pointer' href={"/"}>
         <div className="absolute top-6 left-8 z-10">
           <div className="flex items-center">
             <Image
@@ -33,6 +34,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </div>
           </div>
         </div>
+       </Link>
 
         {/* Sticky Quote at the bottom - Left Aligned */}
         <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/30 to-transparent">
