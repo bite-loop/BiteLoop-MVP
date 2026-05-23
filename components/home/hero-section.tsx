@@ -5,8 +5,10 @@ import { useEffect, useRef } from "react";
 import Navbar from "../navbar/navbar";
 import { FOOD } from "@/public/image/image";
 import gsap from "gsap";
+import FoodCursorBlob from "@/components/cursor-blob/FoodCursorBlob";
 
 export default function Hero() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef    = useRef<HTMLVideoElement>(null);
   const headingRef  = useRef<HTMLHeadingElement>(null);
   const taglineRef  = useRef<HTMLParagraphElement>(null);
@@ -90,6 +92,8 @@ export default function Hero() {
   }, []);
 
   return (
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden rounded-[2rem]">
+        <FoodCursorBlob containerRef={containerRef} />
     <section className="relative h-screen w-full overflow-hidden p-3 md:p-4">
       {/* ── Rounded container ── */}
       <div className="relative h-full w-full overflow-hidden rounded-[2rem]">
@@ -196,5 +200,6 @@ export default function Hero() {
         </div>
       </div>
     </section>
+    </div>
   );
 }
