@@ -1,130 +1,148 @@
-// components/hero.tsx
 "use client";
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import Navbar from "../navbar/navbar";
+import gsap from "gsap";
 import { FOOD } from "@/public/image/image";
+import FoodCursorBlob from "@/components/cursor-blob/FoodCursorBlob";
 
 export default function Hero() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const taglineRef = useRef<HTMLParagraphElement | null>(null);
+  const burgerRef = useRef<HTMLDivElement | null>(null);
+  const slushyRef = useRef<HTMLDivElement | null>(null);
+  const scribbleRef = useRef<SVGPathElement | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch((err) => {
-        console.log("Autoplay prevented:", err);
+    videoRef.current?.play().catch(() => {});
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.fromTo(
+        ".hero-line",
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, stagger: 0.15 }
+      )
+        .fromTo(
+          taglineRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8 },
+          0.4
+        )
+        .fromTo(
+          burgerRef.current,
+          { y: -60, opacity: 0, rotate: -12 },
+          { y: 0, opacity: 1, rotate: 0, duration: 1 }
+        )
+        .fromTo(
+          slushyRef.current,
+          { y: -60, opacity: 0, rotate: 12 },
+          { y: 0, opacity: 1, rotate: 0, duration: 1 }
+        );
+
+      if (scribbleRef.current) {
+        const len = scribbleRef.current.getTotalLength();
+        gsap.set(scribbleRef.current, {
+          strokeDasharray: len,
+          strokeDashoffset: len,
+        });
+
+        gsap.to(scribbleRef.current, {
+          strokeDashoffset: 0,
+          duration: 1.2,
+        });
+      }
+
+      gsap.to(burgerRef.current, {
+        y: -12,
+        repeat: -1,
+        yoyo: true,
+        duration: 3,
+        ease: "sine.inOut",
       });
-    }
+
+      gsap.to(slushyRef.current, {
+        y: -10,
+        repeat: -1,
+        yoyo: true,
+        duration: 3.2,
+        ease: "sine.inOut",
+        delay: 0.5,
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black p-3 md:p-4">
-      {/* Rounded Hero Container */}
-      <div className="relative h-full w-full overflow-hidden rounded-[2rem]">
-        
-        {/* Background Video */}
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/video/hero-video.mp4" type="video/mp4" />
-        </video>
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden rounded-[2rem]">
+      <FoodCursorBlob containerRef={containerRef} />
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/45" />
+      <section className="relative h-screen w-full overflow-hidden p-3 md:p-4">
+        <div className="relative h-full w-full overflow-hidden rounded-[2rem]">
 
-        {/* Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/20" />
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src="/video/hero-video.mp4" type="video/mp4" />
+          </video>
 
-        {/* Navbar */}
+          <div className="absolute inset-0 bg-black/40" />
+
+         
        
 
-        {/* Main Content */}
-        <div className="relative z-10 flex h-full items-end justify-center px-6 pb-20 text-center md:px-12 md:pb-24">
-          <div className="relative max-w-6xl">
+          <div className="relative z-10 flex h-full items-end justify-center pb-16 text-center">
+            <div className="relative max-w-6xl w-full">
 
-            {/* Burger Image */}
-            <div className="absolute hidden md:block left-48 bottom-10 z-20 md:-top-20">
-              <div className="relative h-24 w-24 md:h-40 md:w-40">
-                <Image
-                  src={FOOD.BURGER}
-                  alt="burger"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                />
+              <div ref={burgerRef} className="absolute left-24 bottom-16 hidden md:block">
+                <Image src={FOOD.BURGER} alt="" width={160} height={160} />
               </div>
-            </div>
 
-            {/* Slushy Image */}
-            <div className="absolute hidden md:block -right-8 -top-14 z-20 md:-right-16 md:-top-24">
-              <div className="relative h-20 w-20 md:h-36 md:w-36">
-                <Image
-                  src={FOOD.SLURPY}
-                  alt="slushy"
-                  fill
-                  
-                  className="object-contain drop-shadow-2xl"
-                />
+              <div ref={slushyRef} className="absolute -right-10 -top-20 hidden md:block">
+                <Image src={FOOD.SLURPY} alt="" width={140} height={140} />
               </div>
-            </div>
 
-            {/* Heading */}
-            <h1 className="leading-[0.9] tracking-tight text-white">
-              
-              {/* First Line */}
-              <span className="block text-4xl font-black sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6.5rem]">
-                fast food 
-                <span className="mx-3 inline-block font-serif font-normal italic">
-                  delivered
+              <h1 ref={headingRef} className="text-white leading-[0.9]">
+                <span className="hero-line block text-5xl font-black md:text-7xl">
+                  fast food delivered to
                 </span>
-                to
-              </span>
 
-              {/* Second Line */}
-             {/* Second Line */}
-<span className="block text-4xl font-black sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6.5rem]">
-  your{" "}
+                <span className="hero-line block text-5xl font-black md:text-7xl">
+                  your{" "}
+                  <span className="relative">
+                    doorstep
+                    <svg
+                      className="absolute -bottom-4 left-0 w-full"
+                      viewBox="0 0 500 60"
+                      fill="none"
+                    >
+                      <path
+                        ref={scribbleRef}
+                        d="M20 35 C80 10 180 8 250 20 C320 32 420 28 480 15"
+                        stroke="white"
+                        strokeWidth="4"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </h1>
 
-  {/* Doorstep Word */}
-  <span className="relative inline-block px-2">
-    doorstep
-
-    {/* Multiple Scribbles */}
-    <svg
-      className="absolute -bottom-8 left-1/2 w-[115%] -translate-x-1/2"
-      viewBox="0 0 500 160"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Outer Scribble */}
-      <path
-        d="M60 80C80 20 420 20 440 80C455 125 390 145 250 145C110 145 45 125 60 80Z"
-        stroke="white"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-
-      {/* Middle Scribble */}
-    
-    </svg>
-  </span>
-</span>
-
-              {/* Small Tagline */}
-              <p className="mt-8 text-sm font-medium uppercase tracking-[0.35em] text-white/70 md:text-base">
-                Fresh Meals • Fast Delivery • Endless Cravings
+              <p ref={taglineRef} className="mt-8 text-xs uppercase tracking-[0.3em] text-white/60">
+                Fresh • Fast • Delicious
               </p>
-
-              {/* Rounded Scribble */}
-             
-            </h1>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
