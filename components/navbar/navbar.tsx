@@ -46,17 +46,23 @@ export default function Navbar() {
 
         {/* ── Right side (desktop) ── */}
         <div className="ml-auto hidden items-center gap-3 md:flex">
-          <Tooltip>
-            <TooltipTrigger >
-              <Button className="bg-red-500 hover:bg-red-600 cursor-pointer" size="icon">
-                <Headset className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent><p>Helpline</p></TooltipContent>
-          </Tooltip>
+         <Tooltip>
+  <TooltipTrigger className="inline-flex cursor-pointer h-10 w-9 items-center justify-center rounded-md bg-red-500 text-white transition hover:bg-red-600">
+    <Link
+    
+     href={"/helpline"}
+    >
+    <Headset  className="h-4 w-4" />
+    </Link>
+  </TooltipTrigger>
+
+  <TooltipContent>
+    <p>Helpline</p>
+  </TooltipContent>
+</Tooltip>
 
           <Link href="/login">
-            <Button className="bg-red-500 font-bold px-6 hover:bg-red-600 cursor-pointer">
+            <Button className="bg-red-500 font-bold px-6 py-5 hover:bg-red-600 cursor-pointer">
               Order Now
             </Button>
           </Link>
@@ -87,14 +93,11 @@ export default function Navbar() {
           ))}
 
           <div className="mt-2 flex items-center gap-3">
-            <Tooltip>
-              <TooltipTrigger >
+           
                 <Button className="bg-red-500 hover:bg-red-600 cursor-pointer" size="icon">
                   <Headset className="h-4 w-4" />
                 </Button>
-              </TooltipTrigger>
-              <TooltipContent><p>Helpline</p></TooltipContent>
-            </Tooltip>
+              
 
             <Link href="/login" className="flex-1" onClick={() => setOpen(false)}>
               <Button className="w-full bg-red-500 font-bold hover:bg-red-600 cursor-pointer">
