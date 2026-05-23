@@ -52,9 +52,9 @@ export default function RootLayout({
          <main className="w-full min-h-screen">
         <div className="">
            
-             <TooltipProvider>
+            
                {children}
-             </TooltipProvider>
+            
            
         </div>
        </main>
