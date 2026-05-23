@@ -33,7 +33,7 @@ export default function SmoothScrolling() {
 
     const handleVisibility = () => {
       document.title = document.hidden
-        ? "🍔 BiteLooP - Order Waiting..."
+        ? "👋Hey folks - i'm here."
         : originalTitle;
     };
 
