@@ -3,13 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FOOD } from "@/public/image/image";
+import { FOOD, VECTORS } from "@/public/image/image";
 
 /* ─── data ─────────────────────────────────────────────────── */
 const stats = [
-  { value: "3,00,000+", label: "Restaurants", icon: "🏪" },
-  { value: "800+",      label: "Cities",      icon: "📍" },
-  { value: "3B+",       label: "Orders",      icon: "📦" },
+  { value: "3,00,000+", label: "Restaurants", icon: VECTORS.OUTLATE },
+  { value: "800+",      label: "Cities",      icon: VECTORS.PIN },
+  { value: "3B+",       label: "Orders",      icon: VECTORS.PACK },
 ];
 
 // rotate values must be plain numbers (degrees) — used in inline style
@@ -88,9 +88,11 @@ function StatCard({ stat, started, index }) {
       className="flex items-center gap-3 px-7 py-5 group"
       style={{ animationDelay: `${0.5 + index * 0.12}s` }}
     >
-      <span className="text-3xl transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12 inline-block">
-        {stat.icon}
-      </span>
+     <Image
+      src={stat.icon}
+      alt=""
+      className="w-10 h-10 object-contain"
+     />
       <div>
         <p className="text-xl font-black leading-none tracking-tight">
           {animated}
