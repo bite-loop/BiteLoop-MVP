@@ -16,6 +16,9 @@ import RESTAURANTSSIX from './restrunt/res6.jpg'
 import DINE from './dine.png'
 import YUM from './yum.png'
 import ARROW from './arrow.png'
+import PHONE from './phone.png'
+import RECOM from './recom.png'
+import SMILEY from './smiley.png'
 export const FOOD = {
      BURGER,
      SLURPY,
@@ -31,7 +34,10 @@ export const VECTORS = {
      PACK,
      ARROW,
      DINE,
-     YUM
+     YUM,
+     SMILEY,
+     RECOM,
+     PHONE
 }
 export const RESTAURANTSIMG = {
     RESTAURANTSONE,
