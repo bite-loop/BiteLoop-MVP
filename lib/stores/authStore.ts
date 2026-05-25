@@ -2,7 +2,6 @@
 import { create } from 'zustand';
 import { auth, googleProvider } from '@/lib/firebase/config';
 import { signInWithPopup } from 'firebase/auth';
-import type { UserProfile } from '@/types/user';
 import { AuthStore } from '@/types/store/auth-store';
 
 

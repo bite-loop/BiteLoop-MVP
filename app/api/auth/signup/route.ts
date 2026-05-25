@@ -4,8 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
-      const body = await request.json()
-      const {firstName, lastName, email, password} = body
+      const {firstName, lastName, email, password} = await request.json()
       // Validate
     if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(

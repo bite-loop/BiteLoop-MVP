@@ -8,12 +8,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { useAuthStore } from '@/lib/stores/authStore';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false)
+  const {login, loginWithGoogle} = useAuthStore()
+  const route = useRouter()
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -22,10 +29,33 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Sign up data:', formData);
+    try {
+      setLoading(true)
+      await login(formData.email, formData.password)
+      toast.success("Logged in Successfully!")
+      route.push("/feed")      
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
+
+    } finally {
+       setLoading(false)
+    }
   };
+
+  const handleGoogleLogin = async () => {
+      try {
+        setLoading(true)
+        await loginWithGoogle()
+        toast.success("Logged in with Google")
+        route.push("/feed")
+      } catch (error: any) {
+        toast.error(error.message || 'Google login failed');
+      } finally {
+        setLoading(false)
+      }
+  }
 
   return (
     <AuthLayout>
@@ -40,6 +70,8 @@ const Login = () => {
         {/* Social Login Buttons */}
         <div className="space-y-3 mb-6">
           <Button
+            onClick={handleGoogleLogin}
+            disabled={loading}
             variant="outline"
             className="w-full flex items-center justify-center gap-3 px-4 py-2.5 h-auto"
           >
