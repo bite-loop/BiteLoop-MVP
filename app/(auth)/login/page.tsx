@@ -11,8 +11,6 @@ import React, { useState } from 'react';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
   });
@@ -78,7 +76,7 @@ const Login = () => {
 
         {/* Sign Up Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+         {/*  <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="firstName" className="block text-sm font-medium opacity-60 mb-1">
                 First Name
@@ -109,7 +107,7 @@ const Login = () => {
                 required
               />
             </div>
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor="email" className="block text-sm font-medium opacity-60 mb-1">
