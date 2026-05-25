@@ -8,14 +8,21 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/stores/authStore';
+import { toast } from 'sonner';
 
 const SignUp = () => {
+  const route = useRouter()
+  const {signup} = useAuthStore()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false)
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -24,10 +31,19 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Sign up data:', formData);
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      setLoading(true)
+      await signup(formData)
+      toast.success("Account Created Successfully!")
+      route.push("/feed")
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create account');
+    } finally {
+       setLoading(false)
+    }
+  }
 
   return (
     <AuthLayout>
@@ -153,7 +169,7 @@ const SignUp = () => {
             type="submit"
             className="w-full bg-red-500 text-white py-2.5 h-auto font-semibold  transition-all duration-200 shadow-md hover:shadow-lg"
           >
-            Sign Up
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </Button>
         </form>
 
