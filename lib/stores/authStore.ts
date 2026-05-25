@@ -1,8 +1,9 @@
 // lib/stores/authStore.ts
 import { create } from 'zustand';
+import { auth, googleProvider } from '@/lib/firebase/config';
+import { signInWithPopup } from 'firebase/auth';
 import type { UserProfile } from '@/types/user';
 import { AuthStore } from '@/types/store/auth-store';
-
 
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -19,15 +20,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
     const result = await res.json();
     
-    if (!res.ok) {
-      throw new Error(result.error);
-    }
+    if (!res.ok) throw new Error(result.error);
     
-    // After signup, auto login
     await useAuthStore.getState().login(data.email, data.password);
   },
 
-   login: async (email, password) => {
+  login: async (email, password) => {
     const res = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,19 +34,41 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
     const result = await res.json();
     
-    if (!res.ok) {
-      throw new Error(result.error);
-    }
+    if (!res.ok) throw new Error(result.error);
 
-    // Fetch profile after login
-   /*  await useAuthStore.getState().fetchProfile(); */
+    await useAuthStore.getState().fetchProfile();
   },
 
-   logout: async () => {
+  // Add Google login method
+  loginWithGoogle: async () => {
+    try {
+      // Sign in with Google popup
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      // Send token to backend
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error);
+
+      await useAuthStore.getState().fetchProfile();
+    } catch (error: any) {
+      throw new Error(error.message || 'Google login failed');
+    }
+  },
+
+  logout: async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     set({ user: null, isAuthenticated: false });
   },
-   fetchProfile: async () => {
+
+  fetchProfile: async () => {
     try {
       set({ isLoading: true });
       const res = await fetch('/api/user/profile');
