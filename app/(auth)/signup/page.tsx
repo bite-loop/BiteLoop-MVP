@@ -12,9 +12,11 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Eye, EyeOff } from 'lucide-react';
 
 const SignUp = () => {
   const route = useRouter()
+  const [passwordShow, setPasswordShow] = useState(false)
   const {signup, loginWithGoogle} = useAuthStore()
   const [formData, setFormData] = useState({
     firstName: '',
@@ -156,7 +158,7 @@ const SignUp = () => {
               id="email"
               type="email"
               name="email"
-              placeholder="eg. johnfrans@gmail.com"
+              placeholder="xyra@gmail.com"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2.5 h-auto"
@@ -164,20 +166,36 @@ const SignUp = () => {
             />
           </div>
 
-          <div>
+          <div className=''>
             <Label htmlFor="password" className="block text-sm font-medium opacity-60 mb-1">
               Password
             </Label>
-            <Input
+          <div className='relative'>
+              <Input
               id="password"
-              type="password"
+              type={passwordShow ? "text" : "password"}
               name="password"
-              placeholder="Enter your password"
+              placeholder="*********"
               value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-2.5 h-auto"
               required
             />
+
+             <button
+                    type="button"
+                    onClick={() => setPasswordShow(!passwordShow)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                    aria-label={passwordShow ? "Hide password" : "Show password"}
+                    disabled={loading}
+                  >
+                    {passwordShow ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+          </div>
             <p className="text-xs text-gray-500 mt-2">
               Must be at least 8 characters.
             </p>

@@ -11,12 +11,14 @@ import React, { useState } from 'react';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [passwordShow, setPasswordShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const {login, loginWithGoogle} = useAuthStore()
   const route = useRouter()
@@ -161,19 +163,44 @@ const Login = () => {
             <Label htmlFor="password" className="block text-sm font-medium opacity-60 mb-1">
               Password
             </Label>
-            <Input
+            <div className='relative'>
+              <Input
               id="password"
-              type="password"
+              type={passwordShow ? "text" : "password"}
               name="password"
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-2.5 h-auto"
               required
-            />
-            <p className="text-xs text-gray-500 mt-2">
+            />  
+             <button
+                  type="button"
+                    onClick={() => setPasswordShow(!passwordShow)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                    aria-label={passwordShow ? "Hide password" : "Show password"}
+                    disabled={loading}
+                  >
+                    {passwordShow ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+            </div>
+            <div className='flex justify-between items-center'>
+              <p className="text-xs text-gray-500 mt-2">
               Must be at least 8 characters.
             </p>
+            <Link
+             className=''
+             href={"/reset-password"}
+            >
+             <p className='text-xs opacity-60 hover:opacity-100 hover:text-red-500 transition duration-300 '>
+              Forgot Password
+             </p>
+            </Link>
+            </div>
           </div>
 
           <Button

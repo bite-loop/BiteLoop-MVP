@@ -241,7 +241,7 @@ export default function HorizontalScroll() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden cursor-grab select-none"
+      className="relative  w-full overflow-hidden cursor-grab select-none"
       style={{ height: "100svh" }}
     >
       {/* ── Track — doodles live INSIDE here so they scroll with the words ── */}
