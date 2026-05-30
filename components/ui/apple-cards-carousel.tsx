@@ -15,7 +15,10 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import Image, { ImageProps, StaticImageData } from "next/image";
 import { useOutsideClick } from "@/hooks/use-outside-click";
-
+interface BlurImageProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  src: string | StaticImageData;
+}
 interface CarouselProps {
   //@ts-ignore
   items: JSX.Element[];
@@ -259,7 +262,7 @@ export const Card = ({
         <BlurImage
           src={card.src}
           alt={card.title}
-          fill
+          
           className="absolute inset-0 z-10 object-cover"
         />
       </motion.button>
@@ -272,7 +275,7 @@ export const BlurImage = ({
   className,
   alt,
   ...rest
-}: ImageProps) => {
+}: BlurImageProps) => {
   const [isLoading, setLoading] = useState(true);
 
   const imageSrc = typeof src === "string" ? src : src.src;
