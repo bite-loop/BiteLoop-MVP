@@ -1,5 +1,5 @@
 import { Timestamp } from './common';
-
+// future dine feature
 // ============ RESTAURANT RELATED ============
 export interface Restaurant {
   id: string;
@@ -8,6 +8,7 @@ export interface Restaurant {
   description: string;
   cuisine: string[];
   rating: number;
+//dining?: boolean;
   totalRatings: number;
   reviewCount: number;
   deliveryTime: string; // "25-35 min"

@@ -1,19 +1,8 @@
+import { verifyAuth } from "@/helper/auth-helper/verify";
 import { adminAuth, adminDb } from "@/lib/firebase/admin";
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server";
 
-async function verifyAuth() {
-    const cookieStore = cookies()
-    const session = (await cookieStore).get('session')?.value
-    
-    if(!session) return null;
-    try {
-      const decodedToken = await adminAuth.verifyIdToken(session)
-      return decodedToken
-    } catch (error) {
-      return null
-    }
-}
 export async function GET() {
     try {
       const user = await verifyAuth()
