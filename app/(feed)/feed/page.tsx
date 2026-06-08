@@ -1,4 +1,5 @@
 'use client'
+import ProtectedRoute from '@/components/protected-route/protected-route'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/lib/stores/authStore'
 import { useRouter } from 'next/navigation'
@@ -20,13 +21,15 @@ const Feed = () => {
         }
     }
   return (
-    <div className='py-24 px-24'>
+   <ProtectedRoute>
+     <div className='py-24 px-24'>
         <Button
         onClick={handlelogout}
         variant={'destructive'}>
             Logout
         </Button>
     </div>
+   </ProtectedRoute>
   )
 }
 
