@@ -5,11 +5,11 @@
 </p>
 
 <div align="center">
-  <img src="./banner.png" width="100%" style="max-width: 900px;" />
+  <img src="./public/doc/banners/banner.png" width="100%" style="max-width: 900px;" />
 </div>
 
 <div align="center">
-  <img width="1200" src="./biteloop (1).png" alt="biteloop-banner" />
+  <img width="1200" src="./public/doc/banners/biteloop.png" alt="biteloop-banner" />
 </div>
 
 ---
