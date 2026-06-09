@@ -268,7 +268,7 @@ export function Footer() {
               {/* windows grid */}
               {[0,1,2,3,4,5].map(r => [0,1,2].map(c => (
                 <rect key={`b1-${r}-${c}`} x={110+c*14} y={225+r*22} width="8" height="10"
-                  fill={Math.random()>0.4 ? "#ff8833" : "#ffcc44"} opacity={0.3+Math.random()*0.4}/>
+                  fill={((r * 7 + c * 13) % 100) > 40 ? "#ff8833" : "#ffcc44"} opacity={0.3 + (((r * 11 + c * 17) % 100) / 100) * 0.4}/>
               )))}
               {/* building 2 */}
               <rect x="160" y="245" width="45" height="155" rx="2"/>
