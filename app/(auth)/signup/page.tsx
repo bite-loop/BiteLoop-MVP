@@ -40,7 +40,7 @@ const SignUp = () => {
       setLoading(true)
       await signup(formData)
       toast.success("Account Created Successfully!")
-      route.push("/feed")
+      route.push("/")
     } catch (error: any) {
       toast.error(error.message || 'Failed to create account');
     } finally {
@@ -53,7 +53,7 @@ const SignUp = () => {
          setLoading(true)
          await loginWithGoogle();
          toast.success("Logged in with google");
-         route.push("/feed")
+         route.push("/")
        } catch (error: any) {
          toast.error(error.message || 'Google login failed');
 

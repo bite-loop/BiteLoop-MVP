@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { LabelList } from "recharts";
 import { Textarea } from "@/components/ui/textarea";
+import Navbar from "@/components/navbar/navbar";
 
 interface HelplineStaticInfo {
    icon:  any
@@ -307,7 +308,8 @@ export default function Helpline() {
           </div>
         ))}
 
-        <div className="container mx-auto px-4 py-20 max-w-5xl">
+        <div className="container mx-auto px-4 py-44 max-w-5xl">
+          <Navbar/>
 
           {/* ── hero ── */}
           <div className="text-center mb-16">

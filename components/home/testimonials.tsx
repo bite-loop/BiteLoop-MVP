@@ -126,6 +126,7 @@ function FoodCard({ item }: { item: typeof foodItems[0] }) {
         {/* Image area with overlay gradient */}
         <div className="relative h-44 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
 <Image
+  
   src={item.image}
   alt={item.name}
   fill

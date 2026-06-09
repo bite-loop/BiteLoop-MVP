@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getRestaurantByMenuItemId, restaurants } from "@/lib/restaurant-data";
 import { Star, Heart, Clock, Plus, Minus } from "lucide-react" ;// optional icons, we'll use simple emoji fallback
+import Navbar from "@/components/navbar/navbar";
 
 function Stars({ rating }: { rating: number }) {
   const full = Math.floor(rating);
@@ -31,7 +32,8 @@ export default async function FoodPage({ params }: { params: Promise<{ id: strin
   const otherItems = restaurant.menu.filter(item => item.id !== id);
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl">
+    <main className="container mx-auto px-4 py-32 max-w-6xl">
+      <Navbar/>
       <div className="grid md:grid-cols-2 gap-8">
         {/* Left: Image */}
         <div className="relative rounded-2xl overflow-hidden bg-gray-100">

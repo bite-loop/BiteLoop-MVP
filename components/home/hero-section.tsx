@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import Navbar from "../navbar/navbar";
 import { FOOD } from "@/public/image/image";
 import gsap from "gsap";
 import FoodCursorBlob from "@/components/cursor-blob/FoodCursorBlob";
