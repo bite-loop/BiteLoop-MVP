@@ -125,11 +125,13 @@ function FoodCard({ item }: { item: typeof foodItems[0] }) {
       <div className="group relative bg-card border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
         {/* Image area with overlay gradient */}
         <div className="relative h-44 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
-          <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          />
+<Image
+  src={item.image}
+  alt={item.name}
+  fill
+  className="object-cover group-hover:scale-110 transition-transform duration-700"
+  sizes="(max-width: 768px) 260px, 300px"
+/>
           {/* Dark gradient overlay for better text contrast if needed */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           {/* Emoji badge */}
