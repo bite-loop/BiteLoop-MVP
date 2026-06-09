@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { VECTORS } from "@/public/image/image";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ─── floating food vectors (emoji-based, no external dep) ──── */
 const FOOD_FLOATS = [
@@ -30,17 +31,80 @@ const SCATTER = [
   { emoji: "🌿", top: "34%", left: "30%", size: 30, rot: -7,  dur: "9s",   delay: "2s"   },
 ];
 
-/* ─── testimonials data ─────────────────────────────────────── */
-const testimonials = [
-  { name: "Priya Sharma",  handle: "@priyaeats",      location: "Mumbai",    initials: "PS", rating: 5, text: "Dineout completely changed how I plan date nights. Booked a table at Taj's Sea Lounge in under a minute — the kind of experience that used to take weeks of planning.", tag: "Date Night",      emoji: "🌙" },
-  { name: "Arjun Mehta",   handle: "@arjun_foodie",   location: "Delhi",     initials: "AM", rating: 5, text: "I've used every food app out there. Dineout is the only one where I actually discover new places I'd never find myself — the curation is something else entirely.", tag: "Discovery",       emoji: "🔍" },
-  { name: "Sneha Pillai",  handle: "@snehacooks",     location: "Bangalore", initials: "SP", rating: 5, text: "Anniversary dinner at Karavalli — they already knew my dietary preferences from my profile. No awkward conversation with the waiter. Just a perfect evening.", tag: "Special Occasion", emoji: "💍" },
-  { name: "Rohit Nair",    handle: "@rohit.bites",    location: "Hyderabad", initials: "RN", rating: 5, text: "The biryani trail feature is absolutely unreal. Took me through 6 iconic spots in one afternoon. My friends couldn't believe I knew all these hidden gems.", tag: "Food Trail",       emoji: "🗺️" },
-  { name: "Kavya Reddy",   handle: "@kavyafoods",     location: "Chennai",   initials: "KR", rating: 5, text: "Dineout's 'table for one' filter is a quiet revolution. Eating solo used to feel like an afterthought. Now I get the window seat and the chef's special.", tag: "Solo Dining",      emoji: "📖" },
-  { name: "Vikram Joshi",  handle: "@vikram.plate",   location: "Pune",      initials: "VJ", rating: 4, text: "Organised a corporate lunch for 22 people across three dietary requirements. Dineout handled the whole thing — dietary flags, pre-orders, split billing. Flawless.", tag: "Group Dining",    emoji: "👥" },
-  { name: "Aisha Khan",    handle: "@aishatabletop",  location: "Kolkata",   initials: "AK", rating: 5, text: "Stumbled on a 40-year-old Mughlai place hiding behind a blue door on Park Street. My grandmother grew up eating there. Dineout gave me a piece of her history.", tag: "Hidden Gems",     emoji: "🚪" },
-  { name: "Nikhil Desai",  handle: "@nikhil.hungry",  location: "Ahmedabad", initials: "ND", rating: 5, text: "The live availability feature saved my Valentine's Day. Everywhere was booked solid by noon — Dineout found me a last-minute table at exactly the right place at 8 PM.", tag: "Last Minute",     emoji: "⚡" },
-  { name: "Meera Iyer",    handle: "@meerabowl",      location: "Kochi",     initials: "MI", rating: 5, text: "As someone who grew up eating Kerala food, I was sceptical. But the coastal filter actually knows the difference between real toddy shop fish curry and tourist versions.", tag: "Authentic Food",  emoji: "🐟" },
+// Static food items (temporary until database is ready)
+const foodItems = [
+  {
+    id: "1",
+    name: "Margherita Pizza",
+    price: 12.99,
+    restaurant: "Pizza Fiesta",
+    rating: 4.5,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍕",
+    emoji: "🍕",
+  },
+  {
+    id: "2",
+    name: "Classic Burger",
+    price: 9.99,
+    restaurant: "Burger Hub",
+    rating: 4.7,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍔",
+    emoji: "🍔",
+  },
+  {
+    id: "3",
+    name: "Chicken Biryani",
+    price: 14.99,
+    restaurant: "Spice Kingdom",
+    rating: 4.8,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍛",
+    emoji: "🍛",
+  },
+  {
+    id: "4",
+    name: "Sushi Platter",
+    price: 18.99,
+    restaurant: "Sushi Master",
+    rating: 4.6,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍣",
+    emoji: "🍣",
+  },
+  {
+    id: "5",
+    name: "Caesar Salad",
+    price: 8.99,
+    restaurant: "Green Bowl",
+    rating: 4.3,
+    image: "https://placehold.co/400x300/FF8833/white?text=🥗",
+    emoji: "🥗",
+  },
+  {
+    id: "6",
+    name: "Pad Thai",
+    price: 13.99,
+    restaurant: "Thai Street",
+    rating: 4.7,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍜",
+    emoji: "🍜",
+  },
+  {
+    id: "7",
+    name: "Ice Cream Sundae",
+    price: 5.99,
+    restaurant: "Dessert Den",
+    rating: 4.9,
+    image: "https://placehold.co/400x300/FF8833/white?text=🍦",
+    emoji: "🍦",
+  },
+  {
+    id: "8",
+    name: "Tacos",
+    price: 11.99,
+    restaurant: "Taco Loco",
+    rating: 4.4,
+    image: "https://placehold.co/400x300/FF8833/white?text=🌮",
+    emoji: "🌮",
+  },
 ];
 
 function Stars({ count }: { count: number }) {
@@ -55,39 +119,39 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
+function FoodCard({ item }: { item: typeof foodItems[0] }) {
   return (
-    <div className="group relative bg-card border rounded-2xl p-5 flex flex-col gap-3 hover:border-primary/40 hover:shadow-xl  transition-all duration-300 h-full overflow-hidden">
-      {/* subtle food watermark in corner */}
-      <span className="absolute -bottom-2 -right-1 text-5xl opacity-[0.06] select-none pointer-events-none group-hover:opacity-[0.1] transition-opacity duration-300">
-        {t.emoji}
-      </span>
-
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-primary/8 text-primary border border-primary/15">
-          {t.emoji} {t.tag}
-        </span>
-        <Stars count={t.rating} />
-      </div>
-
-      <p className="text-sm leading-relaxed opacity-75 flex-1">
-        &ldquo;{t.text}&rdquo;
-      </p>
-
-      <div className="flex items-center gap-3 pt-1 border-t border-border/50">
-        <Avatar className="w-8 h-8 text-[11px] font-bold">
-          <AvatarFallback className="bg-primary/10 text-primary">{t.initials}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold leading-none truncate">{t.name}</p>
-          <p className="text-[10px] opacity-40 mt-0.5 truncate">{t.handle} · {t.location}</p>
+    <Link href={`/food/${item.id}`} className="block h-full">
+      <div className="group relative bg-card border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+        {/* Image area */}
+        <div className="relative h-40 bg-gradient-to-br from-primary/10 to-primary/5">
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <span className="absolute top-2 right-2 text-2xl opacity-50">{item.emoji}</span>
+        </div>
+        {/* Content */}
+        <div className="p-4 flex flex-col flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-bold text-base leading-tight line-clamp-1">{item.name}</h3>
+            <Stars count={Math.floor(item.rating)} />
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">{item.restaurant}</p>
+          <div className="mt-3 flex items-center justify-between pt-2 border-t border-border/50">
+            <span className="text-lg font-black">${item.price.toFixed(2)}</span>
+            <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">
+              Order now →
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
-function MarqueeRow({ items, reverse = false, speed = 38 }: { items: typeof testimonials; reverse?: boolean; speed?: number }) {
+function MarqueeRow({ items, reverse = false, speed = 38 }: { items: typeof foodItems; reverse?: boolean; speed?: number }) {
   const doubled = [...items, ...items];
   return (
     <div className="overflow-hidden relative">
@@ -97,9 +161,9 @@ function MarqueeRow({ items, reverse = false, speed = 38 }: { items: typeof test
         className="flex gap-4 w-max"
         style={{ animation: `marquee-${reverse ? "rev" : "fwd"} ${speed}s linear infinite` }}
       >
-        {doubled.map((t, i) => (
-          <div key={i} className="w-[300px] shrink-0">
-            <TestimonialCard t={t} />
+        {doubled.map((item, i) => (
+          <div key={i} className="w-[260px] shrink-0">
+            <FoodCard item={item} />
           </div>
         ))}
       </div>
@@ -297,8 +361,8 @@ export function Testimonials() {
 
         {/* ── marquee rows ── */}
         <div className="space-y-4 relative z-10 marquee-pause">
-          <MarqueeRow items={testimonials.slice(0, 5)} reverse={false} speed={38} />
-          <MarqueeRow items={testimonials.slice(4)}    reverse={true}  speed={46} />
+<MarqueeRow items={foodItems.slice(0, 4)} reverse={false} speed={38} />
+<MarqueeRow items={foodItems.slice(4)}    reverse={true}  speed={46} />
         </div>
 
         {/* ── bottom cta strip ── */}
