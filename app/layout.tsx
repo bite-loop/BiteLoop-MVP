@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LOGOS } from "@/public/logo/logo";
+import Navbar from "@/components/navbar/navbar";
 
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
@@ -52,7 +53,7 @@ export default function RootLayout({
          <main className="w-full min-h-screen">
         <div className="">
            
-            
+           
                {children}
             
            

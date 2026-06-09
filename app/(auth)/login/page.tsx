@@ -51,7 +51,7 @@ const Login = () => {
         setLoading(true)
         await loginWithGoogle()
         toast.success("Logged in with Google")
-        route.push("/feed")
+        route.push("/")
       } catch (error: any) {
         toast.error(error.message || 'Google login failed');
       } finally {
