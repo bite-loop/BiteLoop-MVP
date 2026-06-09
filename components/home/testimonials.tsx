@@ -39,7 +39,7 @@ const foodItems = [
     price: 12.99,
     restaurant: "Pizza Fiesta",
     rating: 4.5,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍕",
+    image: "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=400&h=300&fit=crop",
     emoji: "🍕",
   },
   {
@@ -48,7 +48,7 @@ const foodItems = [
     price: 9.99,
     restaurant: "Burger Hub",
     rating: 4.7,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍔",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
     emoji: "🍔",
   },
   {
@@ -57,7 +57,7 @@ const foodItems = [
     price: 14.99,
     restaurant: "Spice Kingdom",
     rating: 4.8,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍛",
+    image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&h=300&fit=crop",
     emoji: "🍛",
   },
   {
@@ -66,25 +66,25 @@ const foodItems = [
     price: 18.99,
     restaurant: "Sushi Master",
     rating: 4.6,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍣",
+    image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop",
     emoji: "🍣",
   },
-  {
-    id: "5",
-    name: "Caesar Salad",
-    price: 8.99,
-    restaurant: "Green Bowl",
-    rating: 4.3,
-    image: "https://placehold.co/400x300/FF8833/white?text=🥗",
-    emoji: "🥗",
-  },
+{
+  id: "5",
+  name: "Caesar Salad",
+  price: 8.99,
+  restaurant: "Green Bowl",
+  rating: 4.3,
+  image: "https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?w=400&h=300&fit=crop",
+  emoji: "🥗",
+},
   {
     id: "6",
     name: "Pad Thai",
     price: 13.99,
     restaurant: "Thai Street",
     rating: 4.7,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍜",
+    image: "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=400&h=300&fit=crop",
     emoji: "🍜",
   },
   {
@@ -93,7 +93,7 @@ const foodItems = [
     price: 5.99,
     restaurant: "Dessert Den",
     rating: 4.9,
-    image: "https://placehold.co/400x300/FF8833/white?text=🍦",
+    image: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=400&h=300&fit=crop",
     emoji: "🍦",
   },
   {
@@ -102,7 +102,7 @@ const foodItems = [
     price: 11.99,
     restaurant: "Taco Loco",
     rating: 4.4,
-    image: "https://placehold.co/400x300/FF8833/white?text=🌮",
+    image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop",
     emoji: "🌮",
   },
 ];
@@ -307,7 +307,7 @@ export function Testimonials() {
               variant="secondary"
               className="pulse-ring px-4 py-1.5 text-xs font-semibold uppercase tracking-widest gap-2 rounded-full"
             >
-              <span>💬</span> Real diners, real stories
+              <span>💬</span> Popular dishes near you
             </Badge>
           </div>
 
