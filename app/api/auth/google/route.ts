@@ -20,6 +20,12 @@ export async function POST(request: NextRequest) {
     // Verify Google ID token
     const decodedToken = await adminAuth.verifyIdToken(idToken);
     const { uid, email, name, picture } = decodedToken;
+    const expiresIn = 1000 * 60 * 60 * 24 * 7; // 7 days
+
+  const sessionCookie = await adminAuth.createSessionCookie(
+  idToken,
+  { expiresIn }
+);
 
     // Check if user exists in Firestore
     const userDoc = await adminDb.collection('users').doc(uid).get();
@@ -60,12 +66,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Set session cookie
-    response.cookies.set('session', idToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-    });
+   response.cookies.set('session', sessionCookie, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax',
+  maxAge: 60 * 60 * 24 * 7,
+  path: '/',
+});
 
     return response;
   } catch (error: any) {
@@ -75,4 +82,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+} 

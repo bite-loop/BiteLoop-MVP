@@ -94,7 +94,7 @@ export default function Navbar() {
             <Link
               key={l.label}
               href={l.href}
-              className="text-sm font-black capitalize tracking-wide text-white transition hover:text-red-500"
+              className="text-sm font-black capitalize tracking-wide transition hover:text-red-500"
             >
               {l.label}
             </Link>
@@ -107,7 +107,9 @@ export default function Navbar() {
           className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer"
         >
           <div className="relative h-10 w-10 md:h-28 md:w-28">
-            <Image src={LOGOS.DARK} alt="Biteloop Logo" fill className="object-contain" />
+            <Image src={
+               theme === "dark" ? LOGOS.DARK : LOGOS.LIGHT
+            } alt="Biteloop Logo" fill className="object-contain" />
           </div>
         </Link>
 
@@ -134,7 +136,18 @@ export default function Navbar() {
                 className="flex items-center gap-2 rounded-full  transition focus:outline-none"
               >
                 <div className="h-10 w-10 rounded-full bg-red-500 flex items-center justify-center text-white font-medium">
-                  {getInitials()}
+                {
+                  user?.photoURL ? (
+                     <img
+                  src={user?.photoURL as string}
+                  alt=""
+                  className="w-10 h-10 object-contain rounded-full"
+                 />
+                  ) : 
+                  (
+                    <p className="">{getInitials()}</p>
+                  )
+                }
                 </div>
 
               </button>
@@ -155,7 +168,7 @@ export default function Navbar() {
 
                     {/* Profile Link */}
                     <Link
-                      href="/profile"
+                      href={`/profile/${user?.id}`}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                       onClick={() => setDropdownOpen(false)}
                     >
@@ -226,7 +239,7 @@ export default function Navbar() {
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="text-sm font-black uppercase tracking-wide text-white transition hover:text-orange-400"
+              className="text-sm font-black uppercase tracking-wide transition hover:text-orange-400"
             >
               {l.label}
             </Link>
