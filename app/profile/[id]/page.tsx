@@ -295,9 +295,9 @@ export default function Profile() {
         }
       `}</style>
 
-      <div className="min-h-screen">
+      <main className="">
         <Navbar />
-        <div className="max-w-2xl mx-auto px-5 py-28">
+        <section className="py-44 px-6 text-center reveal max-w-2xl mx-auto">
           
           {/* Header with clickable avatar */}
           <div className="flex items-center gap-4 mb-10 pf-up">
@@ -484,8 +484,8 @@ export default function Profile() {
               {isSaving ? "Saving..." : "Save changes"}
             </Button>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
       {saved && (
         <div className="pf-toast">✓ Saved</div>
