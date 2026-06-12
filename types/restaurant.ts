@@ -6,15 +6,25 @@ export interface Restaurant {
   name: string;
   slug: string;
   description: string;
+
   cuisine: string[];
+
   rating: number;
-//dining?: boolean;
   totalRatings: number;
   reviewCount: number;
-  deliveryTime: string; // "25-35 min"
+
+  deliveryTime: string;
+  estimatedDeliveryTime: number; // 30
+
   minOrder: number;
   deliveryFee: number;
   serviceFee: number;
+
+  priceRange: "$" | "$$" | "$$$" | "$$$$";
+
+  featured: boolean;
+  bannerColor?: string;
+
   address: {
     street: string;
     city: string;
@@ -25,16 +35,22 @@ export interface Restaurant {
       longitude: number;
     };
   };
+
   images: {
-    cover: string;
+    cover: string[];
     logo: string;
     gallery: string[];
   };
+
   operatingHours: OperatingHours;
+
   isOpen: boolean;
   isActive: boolean;
-  popularItems: string[]; // menu item IDs
-  tags: string[]; // "trending", "new", "free delivery"
+
+  popularItems: string[];
+
+  tags: string[];
+
   averageOrderValue: number;
 }
 

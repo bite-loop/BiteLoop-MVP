@@ -94,7 +94,7 @@ export default function Navbar() {
             <Link
               key={l.label}
               href={l.href}
-              className="text-sm font-black capitalize tracking-wide transition hover:text-red-500"
+              className="text-sm font-black  capitalize tracking-wide transition hover:text-red-500"
             >
               {l.label}
             </Link>
