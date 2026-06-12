@@ -1,4 +1,6 @@
+// components/ui/apple-cards-carousel.tsx
 "use client";
+
 import React, {
   useEffect,
   useRef,
@@ -15,17 +17,22 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import Image, { ImageProps, StaticImageData } from "next/image";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/stores/authStore";
+
 interface BlurImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
   src: string | StaticImageData;
 }
+
 interface CarouselProps {
   //@ts-ignore
   items: JSX.Element[];
   initialScroll?: number;
 }
 
-type Card = {
+export type Card = {
+  id: string; // Add restaurant ID
   src: string | StaticImageData;
   title: string;
   category: string;
@@ -75,7 +82,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   const handleCardClose = (index: number) => {
     if (carouselRef.current) {
-      const cardWidth = isMobile() ? 230 : 384; // (md:w-96)
+      const cardWidth = isMobile() ? 230 : 384;
       const gap = isMobile() ? 4 : 8;
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
@@ -109,7 +116,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           <div
             className={cn(
               "flex flex-row justify-start gap-4 pl-4",
-              "mx-auto max-w-7xl", // remove max-w-4xl if you want the carousel to span the full width of its container
+              "mx-auto max-w-7xl",
             )}
           >
             {items.map((item, index) => (
@@ -168,6 +175,8 @@ export const Card = ({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { onCardClose, currentIndex } = useContext(CarouselContext);
+  const router = useRouter();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -195,6 +204,15 @@ export const Card = ({
   const handleClose = () => {
     setOpen(false);
     onCardClose(index);
+  };
+
+  const handleNavigate = () => {
+    // Check if user is authenticated
+    if (user) {
+      router.push(`/restaurant/${card.id}`);
+    } else {
+      router.push("/login");
+    }
   };
 
   return (
@@ -241,7 +259,7 @@ export const Card = ({
       </AnimatePresence>
       <motion.button
         layoutId={layout ? `card-${card.title}` : undefined}
-        onClick={handleOpen}
+        onClick={handleNavigate}
         className="relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-[40rem] md:w-96 dark:bg-neutral-900"
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
@@ -262,7 +280,6 @@ export const Card = ({
         <BlurImage
           src={card.src}
           alt={card.title}
-          
           className="absolute inset-0 z-10 object-cover"
         />
       </motion.button>
