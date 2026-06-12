@@ -5,10 +5,35 @@ import { signInWithPopup } from 'firebase/auth';
 import { AuthStore } from '@/types/store/auth-store';
 
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
   isLoading: true,
   isAuthenticated: false,
+   fetchProfile: async () => {
+    // Don't fetch if already have user
+    if (get().user) {
+      set({ isLoading: false });
+      return;
+    }
+    
+    try {
+      set({ isLoading: true });
+      const res = await fetch('/api/user/profile', {
+        credentials: 'include'
+      });
+      
+      if (res.ok) {
+        const user = await res.json();
+        set({ user, isAuthenticated: true, isLoading: false });
+      } else {
+        set({ user: null, isAuthenticated: false, isLoading: false });
+      }
+    } catch (error) {
+      console.error('Fetch profile error:', error);
+      set({ user: null, isAuthenticated: false, isLoading: false });
+    }
+  },
+
 
   signup: async (data) => {
     const res = await fetch('/api/auth/signup', {
@@ -24,19 +49,19 @@ export const useAuthStore = create<AuthStore>((set) => ({
     await useAuthStore.getState().login(data.email, data.password);
   },
 
-  login: async (email, password) => {
+ login: async (email, password) => {
     const res = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
+      credentials: 'include',
     });
-
-    const result = await res.json();
     
-    if (!res.ok) throw new Error(result.error);
-
-    await useAuthStore.getState().fetchProfile();
+    if (res.ok) {
+      await get().fetchProfile();
+    }
   },
+
 
   // Add Google login method
   loginWithGoogle: async () => {
@@ -62,12 +87,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  logout: async () => {
+   logout: async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
-    set({ user: null, isAuthenticated: false });
+    set({ user: null, isAuthenticated: false, isLoading: false });
   },
 
-  fetchProfile: async () => {
+ /*  fetchProfile: async () => {
     try {
       set({ isLoading: true });
       const res = await fetch('/api/user/profile');
@@ -83,5 +108,5 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } finally {
       set({ isLoading: false });
     }
-  },
+  }, */
 }));
