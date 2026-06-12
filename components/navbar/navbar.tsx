@@ -141,7 +141,7 @@ export default function Navbar() {
                      <img
                   src={user?.photoURL as string}
                   alt=""
-                  className="w-10 h-10 object-contain rounded-full"
+                  className="w-10 h-10 object-cover rounded-full"
                  />
                   ) : 
                   (
