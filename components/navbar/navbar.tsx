@@ -108,7 +108,7 @@ export default function Navbar() {
         >
           <div className="relative h-10 w-10 md:h-28 md:w-28">
             <Image src={
-               theme === "dark" ? LOGOS.DARK : LOGOS.LIGHT
+               theme === "dark" ? LOGOS.NEW : LOGOS.NEW
             } alt="Biteloop Logo" fill className="object-contain" />
           </div>
         </Link>
