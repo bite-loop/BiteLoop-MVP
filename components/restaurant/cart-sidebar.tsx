@@ -1,6 +1,7 @@
 // components/restaurant/cart-sidebar.tsx
 import type { MenuItem } from "@/types/restaurant";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface CartSidebarProps {
   cart: Map<string, { item: MenuItem; quantity: number }>;
@@ -28,9 +29,11 @@ export default function CartSidebar({ cart, cartTotal, cartItemCount }: CartSide
           <span>Total</span>
           <span>${cartTotal.toFixed(2)}</span>
         </div>
-        <Button className="w-full mt-4 bg-primary hover:bg-primary/90">
-          Proceed to Checkout
-        </Button>
+        <Link href="/checkout" className="block">
+          <Button className="w-full mt-4 bg-primary hover:bg-primary/90">
+            Proceed to Checkout
+          </Button>
+        </Link>
       </div>
     </div>
   );
