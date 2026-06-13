@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { VECTORS } from "@/public/image/image";
 import Image from "next/image";
-import Link from "next/link";
+
 
 /* ─── floating food vectors (emoji-based, no external dep) ──── */
 const FOOD_FLOATS = [
@@ -121,46 +121,44 @@ function Stars({ count }: { count: number }) {
 
 function FoodCard({ item }: { item: typeof foodItems[0] }) {
   return (
-    <Link href={`/food/${item.id}`} className="block h-full">
-      <div className="group relative bg-card border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-        {/* Image area with overlay gradient */}
-        <div className="relative h-44 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
-<Image
-  
-  src={item.image}
-  alt={item.name}
-  fill
-  className="object-cover group-hover:scale-110 transition-transform duration-700"
-  sizes="(max-width: 768px) 260px, 300px"
-/>
-          {/* Dark gradient overlay for better text contrast if needed */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          {/* Emoji badge */}
-          <span className="absolute top-3 right-3 text-3xl drop-shadow-md">{item.emoji}</span>
+    <div className="group relative bg-card border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full flex flex-col cursor-default">
+      {/* Image area with overlay gradient */}
+      <div className="relative h-44 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
+        <Image
+          src={item.image}
+          alt={item.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-700"
+          sizes="(max-width: 768px) 260px, 300px"
+        />
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Emoji badge */}
+        <span className="absolute top-3 right-3 text-3xl drop-shadow-md">{item.emoji}</span>
+      </div>
+      
+      {/* Content */}
+      <div className="p-4 flex flex-col flex-1 bg-gradient-to-b from-card to-card/95">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-bold text-base leading-tight line-clamp-2 min-h-[2.5rem]">
+            {item.name}
+          </h3>
+          <div className="flex-shrink-0">
+            <Stars count={Math.floor(item.rating)} />
+          </div>
         </div>
         
-        {/* Content */}
-        <div className="p-4 flex flex-col flex-1 bg-gradient-to-b from-card to-card/95">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-bold text-base leading-tight line-clamp-2 min-h-[2.5rem]">
-              {item.name}
-            </h3>
-            <div className="flex-shrink-0">
-              <Stars count={Math.floor(item.rating)} />
-            </div>
-          </div>
-          
-          <p className="text-xs text-muted-foreground mt-1 truncate">{item.restaurant}</p>
-          
-          <div className="mt-4 flex items-center justify-between pt-2 border-t border-border/50">
-            <span className="text-xl font-black tracking-tight">${item.price.toFixed(2)}</span>
-            <span className="text-xs font-semibold bg-primary text-primary-foreground px-3 py-1.5 rounded-full hover:bg-primary/90 transition-colors shadow-sm">
-              Order now →
-            </span>
-          </div>
+        <p className="text-xs text-muted-foreground mt-1 truncate">{item.restaurant}</p>
+        
+        <div className="mt-4 flex items-center justify-between pt-2 border-t border-border/50">
+          <span className="text-xl font-black tracking-tight">${item.price.toFixed(2)}</span>
+          {/* Changed button to non-clickable "Popular" badge */}
+          <span className="text-xs font-semibold bg-primary/20 text-primary px-3 py-1.5 rounded-full">
+            Popular
+          </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
