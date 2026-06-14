@@ -1,40 +1,36 @@
 "use client";
 
-import { useState } from "react";
 import Navbar from "@/components/navbar/navbar";
 import { Button } from "@/components/ui/button";
 import {
   MapPin,
-  Home,
-  Users,
   Plus,
   Ticket,
 } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cartStore";
-
-const addresses = [
-  {
-    id: "home",
-    name: "Home",
-    icon: Home,
-    address: "123 Main Street, Toronto, ON",
-    time: "25 MINS",
-  },
-  {
-    id: "friend",
-    name: "Friends & Family",
-    icon: Users,
-    address: "456 Queen Street, Toronto, ON",
-    time: "30 MINS",
-  },
-];
+import { useAuthStore } from "@/lib/stores/authStore";
+import { useState, useEffect } from "react";
+import type { Address } from "@/types/user";
 
 export default function CheckoutPage() {
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0].id);
+ const [selectedAddress, setSelectedAddress] =
+  useState<string>("");
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
 
 const { cart, restaurantName, getTotal } = useCartStore();
+const { user } = useAuthStore();
+
+const addresses = (user?.savedAddresses ?? []) as Address[];
+
+useEffect(() => {
+  const defaultAddress =
+    addresses.find((a) => a.isDefault);
+
+  if (defaultAddress) {
+    setSelectedAddress(defaultAddress.id);
+  }
+}, [addresses]);
 
 const cartItems = Array.from(cart.values());
 if (cartItems.length === 0) {
@@ -53,6 +49,7 @@ if (cartItems.length === 0) {
     </>
   );
 }
+
 
 // Cart subtotal
 const itemTotal = getTotal();
@@ -104,12 +101,18 @@ const total =
       </p>
     </div>
   </div>
-
+{addresses.length === 0 && (
+  <div className="text-center py-10">
+    <p className="text-muted-foreground">
+      No saved addresses found.
+    </p>
+  </div>
+)}
   <div className="grid md:grid-cols-2 gap-4">
     {addresses.map((addr) => {
-      const Icon = addr.icon;
 
       return (
+        
         <div
           key={addr.id}
           onClick={() => setSelectedAddress(addr.id)}
@@ -120,19 +123,19 @@ const total =
           }`}>
 
           <div className="flex items-start gap-3">
-            <Icon className="mt-1" size={20} />
+            <MapPin className="mt-1" size={20} />
 
             <div>
               <h3 className="font-bold text-lg">
-                {addr.name}
+                {addr.label}
               </h3>
 
               <p className="text-sm text-muted-foreground mt-2">
-                {addr.address}
+                {addr.fullAddress}
               </p>
 
               <p className="font-semibold mt-6">
-                {addr.time}
+                30-40 MINS
               </p>
 
               <Button
