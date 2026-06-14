@@ -34,11 +34,7 @@ export default function CheckoutPage() {
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
 
-const {
-  cart,
-  restaurantName,
-  getTotal,
-} = useCartStore();
+const { cart, restaurantName, getTotal } = useCartStore();
 
 const cartItems = Array.from(cart.values());
 if (cartItems.length === 0) {
@@ -58,14 +54,29 @@ if (cartItems.length === 0) {
   );
 }
 
-  // Calculate totals
- const itemTotal = getTotal();
-const deliveryFee = itemTotal > 30 ? 0 : 4.99;
+// Cart subtotal
+const itemTotal = getTotal();
 
-const gstCharges = itemTotal * 0.13; 
+// Delivery fee
+// Free delivery above $35
+const deliveryFee = itemTotal >= 35 ? 0 : 4.99;
 
-const total = itemTotal + deliveryFee + gstCharges;
-  const savings = 133.2;
+// Platform / service fee
+const serviceFee = itemTotal > 0 ? 1.99 : 0;
+
+// HST (Ontario example: 13%)
+const tax = (itemTotal + deliveryFee + serviceFee) * 0.13;
+
+// Savings
+const savings =
+  itemTotal >= 35 ? 4.99 : 0;
+
+// Final total
+const total =
+  itemTotal +
+  deliveryFee +
+  serviceFee +
+  tax;
 
   return (
     <>
@@ -77,7 +88,7 @@ const total = itemTotal + deliveryFee + gstCharges;
           {/* Left Column: Delivery Address */}
           <div className="space-y-6">
             {/* Address Section */}
-<div className="bg-card border rounded-2xl p-8">
+<div className="bg-card border rounded-3xl p-8 shadow-sm">
   <div className="flex items-start gap-4 mb-8">
     <div className="w-12 h-12 bg-primary text-white flex items-center justify-center rounded-lg shadow-md">
       <MapPin size={22} />
@@ -104,10 +115,10 @@ const total = itemTotal + deliveryFee + gstCharges;
           onClick={() => setSelectedAddress(addr.id)}
           className={`border rounded-xl p-6 cursor-pointer transition-all ${
             selectedAddress === addr.id
-              ? "border-primary bg-primary/5 shadow-md"
+              ? "border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20"
               : "hover:border-primary/50 hover:shadow-md"
-          }`}
-        >
+          }`}>
+
           <div className="flex items-start gap-3">
             <Icon className="mt-1" size={20} />
 
@@ -160,60 +171,88 @@ const total = itemTotal + deliveryFee + gstCharges;
           </div>
 
           {/* Right Column: Bill Summary */}
-<div className="space-y-4 sticky top-24">
+          <div className="space-y-4 sticky top-24">
+<h2 className="font-bold text-xl">
+  Order Summary
+</h2>
 
   {/* Restaurant Card */}
-  <div className="bg-card border rounded-2xl p-5">
-<h3 className="font-bold text-lg">
-  {restaurantName || "Restaurant"}
-</h3>
+  <div className="bg-card border rounded-3xl p-6 shadow-sm">
+<div className="flex items-center justify-between mb-4">
+  <div>
+    <h3 className="font-bold text-xl">
+      {restaurantName || "Restaurant"}
+    </h3>
 
-    <p className="text-sm text-muted-foreground mb-4">
-      Titagarh
+    <p className="text-sm text-muted-foreground mt-1">
+      Estimated delivery 25-35 mins
     </p>
+  </div>
+
+  <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">
+    {cartItems.length} Items
+  </span>
+</div>
+
 <div className="w-12 h-px bg-border my-4" />
-    <div className="space-y-3">
+    <div className="space-y-4">
 {cartItems.map(({ item, quantity }) => (
-  <div
-    key={item.id}
-    className="flex justify-between text-sm"
-  >
-    <div>
-      <p className="font-medium">
-        {item.name}
-      </p>
+<div
+  key={item.id}
+  className="flex justify-between items-center"
+>
+   <div>
+  <p className="font-medium">
+    {item.name}
+  </p>
 
-      <p className="text-muted-foreground">
-        Qty {quantity}
-      </p>
-    </div>
+  <p className="text-xs text-muted-foreground">
+    Qty {quantity}
+  </p>
+</div>
 
-    <span>
-      ${(item.price * quantity).toFixed(2)}
-    </span>
+<p className="font-semibold">
+  ${(item.price * quantity).toFixed(2)}
+</p>
+
   </div>
 ))}
     </div>
   </div>
 
   {/* Suggestions */}
-  <div className="bg-card border rounded-2xl p-4">
+ {/* Suggestions */}
+<div className="bg-card border rounded-2xl p-5">
+
+  <h3 className="font-semibold mb-3">
+    Delivery Instructions
+  </h3>
     <textarea
       value={suggestions}
+      placeholder="Extra napkins, less spicy, ring bell once..."
       onChange={(e) =>
         setSuggestions(e.target.value)
       }
       rows={3}
-      className="w-full resize-none outline-none bg-transparent text-sm"
-      placeholder="Any suggestions? We will pass it on..."
+      className="
+w-full
+resize-none
+rounded-xl
+border
+bg-background
+p-3
+text-sm
+outline-none
+"
     />
   </div>
 
   {/* No Contact */}
-  <div className="bg-card border rounded-2xl p-4">
-    <label className="flex gap-3">
-      <input
-        type="checkbox"
+  <div className="bg-card border rounded-2xl p-5">
+    <label className="flex items-start gap-4 cursor-pointer">
+<input
+  type="checkbox"
+  className="mt-1 h-4 w-4"
         checked={noContact}
         onChange={(e) =>
           setNoContact(e.target.checked)
@@ -234,57 +273,105 @@ const total = itemTotal + deliveryFee + gstCharges;
   </div>
 
   {/* Coupon */}
-  <div className="bg-card border rounded-2xl p-4 cursor-pointer hover:border-primary transition">
-    <div className="flex items-center gap-2">
-      <Ticket size={18} />
+  <div
+  className="
+  bg-primary/5
+  border
+  border-primary/20
+  rounded-2xl
+  p-5
+  cursor-pointer
+  hover:bg-primary/10
+  transition
+  "
+>
+  <div className="flex items-center gap-3">
+  <Ticket size={20} />
 
-      <span className="font-medium">
-        Apply Coupon
+  <div>
+    <p className="font-semibold">
+      Apply Coupon
+    </p>
+
+    <p className="text-xs text-muted-foreground">
+      Save more on this order
+    </p>
+  </div>
+</div>
+  </div>
+
+ {/* Bill */}
+<div className="bg-card border rounded-2xl p-5">
+  <h3 className="font-bold mb-4">
+    Bill Details
+  </h3>
+
+  <div className="space-y-3 text-sm">
+    <div className="flex justify-between">
+      <span>Item Total</span>
+      <span>${itemTotal.toFixed(2)}</span>
+    </div>
+
+    <div className="flex justify-between">
+      <span>Delivery Fee</span>
+      <span>
+        {deliveryFee === 0
+          ? "FREE"
+          : `$${deliveryFee.toFixed(2)}`}
       </span>
     </div>
-  </div>
 
-  {/* Bill */}
-  <div className="bg-card border rounded-2xl p-5">
-    <h3 className="font-bold mb-4">
-      Bill Details
-    </h3>
+    <div className="flex justify-between">
+      <span>Platform Fee</span>
+      <span>${serviceFee.toFixed(2)}</span>
+    </div>
 
-    <div className="space-y-3 text-sm">
-      <div className="flex justify-between">
-        <span>Item Total</span>
-        <span>${itemTotal.toFixed(2)}</span>
-      </div>
+    <div className="flex justify-between">
+      <span>HST (13%)</span>
+      <span>${tax.toFixed(2)}</span>
+    </div>
 
-      <div className="flex justify-between">
-        <span>Delivery Fee</span>
-        <span>${deliveryFee.toFixed(2)}</span>
-      </div>
-
-      <div className="flex justify-between">
-        <span>GST & Charges</span>
-        <span>${gstCharges.toFixed(2)}</span>
-      </div>
-
-      <div className="border-t pt-3 mt-3">
-        <div className="flex justify-between font-bold">
-          <span>TO PAY</span>
-          <span>${total.toFixed(2)}</span>
-        </div>
+    <div className="border-t pt-4 mt-4">
+      <div className="flex justify-between font-bold text-lg">
+        <span>TO PAY</span>
+        <span>${total.toFixed(2)}</span>
       </div>
     </div>
   </div>
+</div>
 
   {/* Savings */}
-  <div className="border border-green-500 bg-green-50 text-green-700 rounded-xl p-4 font-medium">
-    Savings of ${savings.toFixed(2)}
-  </div>
+<div className="
+border
+border-green-500/30
+bg-green-500/10
+text-green-600
+rounded-2xl
+p-4
+font-semibold
+">
+  You saved ${savings.toFixed(2)}
+</div>
 
-  <Button className="w-full h-12 text-base font-semibold">
+  <Button
+  className="
+  w-full
+  h-14
+  text-base
+  font-bold
+  rounded-2xl
+  shadow-lg
+  bg-primary
+  hover:scale-[1.02]
+  transition-all
+  "
+>
     Proceed to Payment
   </Button>
+
 </div>
-        </div>
+</div>
+      
       </main>
     </>
   );
