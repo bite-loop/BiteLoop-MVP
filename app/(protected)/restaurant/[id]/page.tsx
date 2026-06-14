@@ -3,14 +3,15 @@
 
 import React, { useState, useEffect } from "react";
 import { restaurants } from "@/constant/dummy-data/restaurant"; // Fixed import path
-import type { Restaurant, MenuCategory, MenuItem } from "@/types/restaurant";
 import Navbar from "@/components/navbar/navbar";
 import RestaurantHero from "@/components/restaurant/restaurant-hero";
 import RestaurantInfo from "@/components/restaurant/restaurant-info";
 import OperatingHours from "@/components/restaurant/operating-hours";
 import PopularItems from "@/components/restaurant/popular-items";
 import MenuSection from "@/components/restaurant/menu-section";
-import CartSidebar from "@/components/restaurant/cart-sidebar";
+import FloatingCartBar from "@/components/restaurant/floating-cart-bar";
+import { useCartStore } from "@/lib/stores/cartStore";
+import type { Restaurant, MenuCategory } from "@/types/restaurant";
 
 const mockMenus: Record<string, MenuCategory[]> = {
   "rest_1": [
@@ -190,9 +191,15 @@ interface RestaurantPageProps {
 
 export default function RestaurantPage({ params }: RestaurantPageProps) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [cart, setCart] = useState<Map<string, { item: MenuItem; quantity: number }>>(new Map());
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+const {
+  cart,
+  addToCart,
+  removeFromCart,
+  getItemCount,
+  getTotal,
+} = useCartStore();
 
   useEffect(() => {
     const loadRestaurant = async () => {
@@ -208,27 +215,6 @@ export default function RestaurantPage({ params }: RestaurantPageProps) {
     loadRestaurant();
   }, [params]);
 
-  const addToCart = (item: MenuItem) => {
-    const newCart = new Map(cart);
-    const existing = newCart.get(item.id);
-    if (existing) {
-      newCart.set(item.id, { ...existing, quantity: existing.quantity + 1 });
-    } else {
-      newCart.set(item.id, { item, quantity: 1 });
-    }
-    setCart(newCart);
-  };
-
-  const removeFromCart = (itemId: string) => {
-    const newCart = new Map(cart);
-    const existing = newCart.get(itemId);
-    if (existing && existing.quantity > 1) {
-      newCart.set(itemId, { ...existing, quantity: existing.quantity - 1 });
-    } else {
-      newCart.delete(itemId);
-    }
-    setCart(newCart);
-  };
 
   if (isLoading || !restaurant) {
     return (
@@ -242,8 +228,8 @@ export default function RestaurantPage({ params }: RestaurantPageProps) {
   }
 
   const menuCategories = restaurantId ? mockMenus[restaurantId] || [] : [];
-  const cartItemCount = Array.from(cart.values()).reduce((sum, { quantity }) => sum + quantity, 0);
-  const cartTotal = Array.from(cart.values()).reduce((sum, { item, quantity }) => sum + item.price * quantity, 0);
+const cartItemCount = getItemCount();
+const cartTotal = getTotal();
 
   return (
     <>
@@ -255,18 +241,29 @@ export default function RestaurantPage({ params }: RestaurantPageProps) {
             <RestaurantInfo restaurant={restaurant} />
             <OperatingHours operatingHours={restaurant.operatingHours} />
             <PopularItems popularItems={restaurant.popularItems} />
-            <MenuSection 
-              menuCategories={menuCategories}
-              cart={cart}
-              addToCart={addToCart}
-              removeFromCart={removeFromCart}
-            />
+<MenuSection
+  menuCategories={menuCategories}
+  cart={cart}
+  addToCart={(item) =>
+    addToCart(
+      item,
+      restaurant.id,
+      restaurant.name
+    )
+  }
+  removeFromCart={removeFromCart}
+/>
           </div>
-          {cartItemCount > 0 && (
-            <CartSidebar cart={cart} cartTotal={cartTotal} cartItemCount={cartItemCount} />
-          )}
         </div>
       </div>
+
+                {cartItemCount > 0 && (
+  <FloatingCartBar
+    itemCount={cartItemCount}
+    total={cartTotal}
+  />
+)}
+
     </>
   );
 }
