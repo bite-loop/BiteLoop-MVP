@@ -71,7 +71,7 @@ export default function CheckoutPage() {
     <>
       <Navbar />
       <main className="max-w-7xl mx-auto px-6 py-8 pt-29">
-        <h1 className="text-2xl font-bold mb-6 tracking-tight">SECURE CHECKOUT</h1>
+        <h1 className="text-2xl font-bold mb-6 tracking-tight">SECURE CHECKOUT</h1>np
 
         <div className="grid lg:grid-cols-[1.8fr_420px] gap-8 items-start">
           {/* Left Column: Delivery Address */}

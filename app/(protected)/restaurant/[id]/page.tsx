@@ -10,7 +10,7 @@ import RestaurantInfo from "@/components/restaurant/restaurant-info";
 import OperatingHours from "@/components/restaurant/operating-hours";
 import PopularItems from "@/components/restaurant/popular-items";
 import MenuSection from "@/components/restaurant/menu-section";
-import CartSidebar from "@/components/restaurant/cart-sidebar";
+import FloatingCartBar from "@/components/restaurant/floating-cart-bar";
 
 const mockMenus: Record<string, MenuCategory[]> = {
   "rest_1": [
@@ -262,11 +262,16 @@ export default function RestaurantPage({ params }: RestaurantPageProps) {
               removeFromCart={removeFromCart}
             />
           </div>
-          {cartItemCount > 0 && (
-            <CartSidebar cart={cart} cartTotal={cartTotal} cartItemCount={cartItemCount} />
-          )}
         </div>
       </div>
+
+                {cartItemCount > 0 && (
+  <FloatingCartBar
+    itemCount={cartItemCount}
+    total={cartTotal}
+  />
+)}
+
     </>
   );
 }
