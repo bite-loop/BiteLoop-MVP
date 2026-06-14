@@ -88,7 +88,7 @@ const total =
           {/* Left Column: Delivery Address */}
           <div className="space-y-6">
             {/* Address Section */}
-<div className="bg-card border rounded-3xl p-8 shadow-sm">
+<div className="bg-card border rounded-xl p-8 shadow-sm">
   <div className="flex items-start gap-4 mb-8">
     <div className="w-12 h-12 bg-primary text-white flex items-center justify-center rounded-lg shadow-md">
       <MapPin size={22} />
@@ -105,7 +105,7 @@ const total =
     </div>
   </div>
 
-  <div className="grid md:grid-cols-2 gap-6">
+  <div className="grid md:grid-cols-2 gap-4">
     {addresses.map((addr) => {
       const Icon = addr.icon;
 
@@ -113,7 +113,7 @@ const total =
         <div
           key={addr.id}
           onClick={() => setSelectedAddress(addr.id)}
-          className={`border rounded-xl p-6 cursor-pointer transition-all ${
+          className={`border rounded-xl p-4 cursor-pointer transition-all ${
             selectedAddress === addr.id
               ? "border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20"
               : "hover:border-primary/50 hover:shadow-md"
@@ -149,7 +149,7 @@ const total =
   </div>
 
   <div className="mt-6">
-    <button className="border border-dashed rounded-xl p-6 w-full text-left hover:border-primary transition">
+    <button className="border border-dashed rounded-xl p-4 w-full text-left hover:border-primary transition">
       <div className="flex items-center gap-3">
         <Plus />
 
@@ -171,21 +171,21 @@ const total =
           </div>
 
           {/* Right Column: Bill Summary */}
-          <div className="space-y-4 sticky top-24">
-<h2 className="font-bold text-xl">
+          <div className="space-y-3 sticky top-20 max-w-[400px]">
+<h2 className="font-semibold text-lg mb-2">
   Order Summary
 </h2>
 
   {/* Restaurant Card */}
-  <div className="bg-card border rounded-3xl p-6 shadow-sm">
+  <div className="bg-card border rounded-2xl p-4 shadow-sm">
 <div className="flex items-center justify-between mb-4">
   <div>
-    <h3 className="font-bold text-xl">
+    <h3 className="font-semibold text-lg">
       {restaurantName || "Restaurant"}
     </h3>
 
     <p className="text-sm text-muted-foreground mt-1">
-      Estimated delivery 25-35 mins
+      25-35 min delivery
     </p>
   </div>
 
@@ -222,7 +222,7 @@ const total =
 
   {/* Suggestions */}
  {/* Suggestions */}
-<div className="bg-card border rounded-2xl p-5">
+<div className="bg-card border rounded-2xl p-4">
 
   <h3 className="font-semibold mb-3">
     Delivery Instructions
@@ -248,7 +248,7 @@ outline-none
   </div>
 
   {/* No Contact */}
-  <div className="bg-card border rounded-2xl p-5">
+  <div className="bg-card border rounded-2xl p-4">
     <label className="flex items-start gap-4 cursor-pointer">
 <input
   type="checkbox"
@@ -279,7 +279,7 @@ outline-none
   border
   border-primary/20
   rounded-2xl
-  p-5
+  p-4
   cursor-pointer
   hover:bg-primary/10
   transition
@@ -301,12 +301,12 @@ outline-none
   </div>
 
  {/* Bill */}
-<div className="bg-card border rounded-2xl p-5">
+<div className="bg-card border rounded-2xl p-4">
   <h3 className="font-bold mb-4">
     Bill Details
   </h3>
 
-  <div className="space-y-3 text-sm">
+  <div className="space-y-2 text-sm">
     <div className="flex justify-between">
       <span>Item Total</span>
       <span>${itemTotal.toFixed(2)}</span>
@@ -354,17 +354,16 @@ font-semibold
 </div>
 
   <Button
-  className="
-  w-full
-  h-14
-  text-base
-  font-bold
-  rounded-2xl
-  shadow-lg
-  bg-primary
-  hover:scale-[1.02]
-  transition-all
-  "
+className="
+w-full
+h-12
+text-sm
+font-semibold
+rounded-xl
+bg-primary
+hover:scale-[1.01]
+transition-all
+"
 >
     Proceed to Payment
   </Button>
