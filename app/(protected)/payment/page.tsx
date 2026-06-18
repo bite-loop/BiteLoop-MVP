@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { motion ,AnimatePresence} from "framer-motion";
+import Confetti from "react-confetti";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -301,6 +302,35 @@ mt-6
 
 </motion.main>
 
+{showSuccess && (
+  <div
+    className="
+    fixed
+    inset-0
+    z-[100]
+    bg-black/40
+    flex
+    items-center
+    justify-center
+    "
+  >
+
+<Confetti
+  recycle={false}
+  numberOfPieces={300}
+  gravity={0.45}
+  initialVelocityY={20}
+  initialVelocityX={14}
+  tweenDuration={3000}
+/>
+
+    <motion.div>
+      ...
+    </motion.div>
+
+  </div>
+)}
+
       {/* Success Modal */}
       <AnimatePresence>
 {showSuccess && (
@@ -345,13 +375,26 @@ justify-center
 >
 
             <div className="flex justify-center mb-5">
-              <CheckCircle2
-                size={90}
-                className="
-text-green-500
-animate-pulse
-"
-              />
+<motion.div
+  initial={{
+    scale: 0,
+    rotate: -180,
+  }}
+  animate={{
+    scale: 1,
+    rotate: 0,
+  }}
+  transition={{
+    type: "spring",
+    stiffness: 180,
+    damping: 12,
+  }}
+>
+  <CheckCircle2
+    size={90}
+    className="text-green-500"
+  />
+</motion.div>
             </div>
 
 <h2 className="text-4xl font-black text-center">
