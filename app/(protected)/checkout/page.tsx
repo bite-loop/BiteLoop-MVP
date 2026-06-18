@@ -6,6 +6,7 @@ import {
   MapPin,
   Plus,
   Ticket,
+  Trash2,
 } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { useAuthStore } from "@/lib/stores/authStore";
@@ -18,7 +19,12 @@ export default function CheckoutPage() {
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
 
-const { cart, restaurantName, getTotal } = useCartStore();
+const {
+  cart,
+  restaurantName,
+  getTotal,
+  removeFromCart,
+} = useCartStore();
 const { user } = useAuthStore();
 
 const addresses = (user?.savedAddresses ?? []) as Address[];
@@ -202,23 +208,38 @@ const total =
 {cartItems.map(({ item, quantity }) => (
 <div
   key={item.id}
-  className="flex justify-between items-center"
+  className="flex items-center justify-between"
 >
-   <div>
-  <p className="font-medium">
-    {item.name}
-  </p>
+  <div className="flex-1">
+    <p className="font-medium">
+      {item.name}
+    </p>
 
-  <p className="text-xs text-muted-foreground">
-    Qty {quantity}
-  </p>
-</div>
-
-<p className="font-semibold">
-  ${(item.price * quantity).toFixed(2)}
-</p>
-
+    <p className="text-xs text-muted-foreground">
+      Qty {quantity}
+    </p>
   </div>
+
+  <div className="flex items-center gap-3">
+    <p className="font-semibold">
+      ${(item.price * quantity).toFixed(2)}
+    </p>
+
+    <button
+      onClick={() => removeFromCart(item.id)}
+      className="
+      p-2
+      rounded-lg
+      text-muted-foreground
+      hover:text-red-500
+      hover:bg-red-500/10
+      transition-all
+      "
+    >
+      <Trash2 size={16} />
+    </button>
+  </div>
+</div>
 ))}
     </div>
   </div>
