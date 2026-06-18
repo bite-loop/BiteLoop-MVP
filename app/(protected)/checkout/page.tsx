@@ -13,12 +13,19 @@ import { useAuthStore } from "@/lib/stores/authStore";
 import { useState, useEffect } from "react";
 import type { Address } from "@/types/user";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useCheckoutStore } from "@/lib/stores/checkoutStore";
 
 export default function CheckoutPage() {
  const [selectedAddress, setSelectedAddress] =
   useState<string>("");
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
+
+  const router = useRouter();
+
+const { setCheckoutData } =
+  useCheckoutStore();
 
 const {
   cart,
@@ -81,6 +88,41 @@ const total =
   deliveryFee +
   serviceFee +
   tax;
+
+const selectedAddressData =
+  addresses.find(
+    (addr) =>
+      addr.id === selectedAddress
+  ) || null;
+
+  const handleProceedToPayment = () => {
+  if (!selectedAddressData) return;
+
+  setCheckoutData({
+    restaurantName:
+      restaurantName || "Restaurant",
+
+    items: cartItems,
+
+    address: selectedAddressData,
+
+    noContact,
+
+    suggestions,
+
+    itemTotal,
+
+    deliveryFee,
+
+    serviceFee,
+
+    tax,
+
+    total,
+  });
+
+  router.push("/payment");
+};
 
   return (
     <>
@@ -426,25 +468,29 @@ font-semibold
   You saved ${savings.toFixed(2)}
 </div>
 
-  <Button
-className="
-w-full
-h-14
-text-base
-font-semibold
-rounded-2xl
-bg-primary
-shadow-lg
-shadow-primary/20
-hover:scale-[1.02]
-hover:shadow-xl
-hover:shadow-primary/30
-transition-all
-duration-300
-"
+<Button
+  onClick={handleProceedToPayment}
+  disabled={!selectedAddress}
+  className="
+  w-full
+  h-14
+  text-base
+  font-semibold
+  rounded-2xl
+  bg-primary
+  shadow-lg
+  shadow-primary/20
+  hover:scale-[1.02]
+  hover:shadow-xl
+  hover:shadow-primary/30
+  transition-all
+  duration-300
+  disabled:opacity-50
+  disabled:cursor-not-allowed
+  "
 >
-    Proceed to Payment
-  </Button>
+  Proceed to Payment
+</Button>
 
 </div>
 </div>
