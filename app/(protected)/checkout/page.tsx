@@ -6,11 +6,13 @@ import {
   MapPin,
   Plus,
   Ticket,
+  Trash2,
 } from "lucide-react";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { useState, useEffect } from "react";
 import type { Address } from "@/types/user";
+import { motion } from "framer-motion";
 
 export default function CheckoutPage() {
  const [selectedAddress, setSelectedAddress] =
@@ -18,7 +20,12 @@ export default function CheckoutPage() {
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
 
-const { cart, restaurantName, getTotal } = useCartStore();
+const {
+  cart,
+  restaurantName,
+  getTotal,
+  removeFromCart,
+} = useCartStore();
 const { user } = useAuthStore();
 
 const addresses = (user?.savedAddresses ?? []) as Address[];
@@ -78,8 +85,25 @@ const total =
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 py-8 pt-29">
-        <h1 className="text-2xl font-bold mb-6 tracking-tight">SECURE CHECKOUT</h1>
+      <motion.main
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4 }}
+  className="max-w-7xl mx-auto px-6 py-8 pt-29"
+>
+<div className="mb-8">
+  <p className="text-sm uppercase tracking-[0.25em] text-primary font-semibold">
+    Checkout
+  </p>
+
+  <h1 className="text-4xl font-bold tracking-tight mt-2">
+    Secure Checkout
+  </h1>
+
+  <p className="text-muted-foreground mt-2">
+    Review your order and delivery details.
+  </p>
+</div>
 
         <div className="grid lg:grid-cols-[1.8fr_420px] gap-8 items-start">
           {/* Left Column: Delivery Address */}
@@ -174,13 +198,21 @@ const total =
           </div>
 
           {/* Right Column: Bill Summary */}
-          <div className="space-y-3 sticky top-20 max-w-[400px]">
+          <div className="space-y-3 sticky top-28 max-w-[400px]">
 <h2 className="font-semibold text-lg mb-2">
   Order Summary
 </h2>
 
   {/* Restaurant Card */}
-  <div className="bg-card border rounded-2xl p-4 shadow-sm">
+  <div className="bg-card/80
+backdrop-blur-xl
+border
+border-border/60
+rounded-2xl
+shadow-lg
+hover:shadow-xl
+transition-all
+duration-300 p-4 shadow-sm">
 <div className="flex items-center justify-between mb-4">
   <div>
     <h3 className="font-semibold text-lg">
@@ -202,29 +234,52 @@ const total =
 {cartItems.map(({ item, quantity }) => (
 <div
   key={item.id}
-  className="flex justify-between items-center"
+  className="flex items-center justify-between"
 >
-   <div>
-  <p className="font-medium">
-    {item.name}
-  </p>
+  <div className="flex-1">
+    <p className="font-medium">
+      {item.name}
+    </p>
 
-  <p className="text-xs text-muted-foreground">
-    Qty {quantity}
-  </p>
-</div>
-
-<p className="font-semibold">
-  ${(item.price * quantity).toFixed(2)}
-</p>
-
+    <p className="text-xs text-muted-foreground">
+      Qty {quantity}
+    </p>
   </div>
+
+  <div className="flex items-center gap-3">
+    <p className="font-semibold">
+      ${(item.price * quantity).toFixed(2)}
+    </p>
+
+    <button
+      onClick={() => removeFromCart(item.id)}
+      className="
+      p-2
+      rounded-lg
+      text-muted-foreground
+      hover:text-red-500
+      hover:bg-red-500/10
+      transition-all
+      "
+    >
+      <Trash2 size={16} />
+    </button>
+  </div>
+</div>
 ))}
     </div>
   </div>
 
  {/* Suggestions */}
-<div className="bg-card border rounded-2xl p-4">
+<div className="bg-card/80
+backdrop-blur-xl
+border
+border-border/60
+rounded-2xl
+shadow-lg
+hover:shadow-xl
+transition-all
+duration-300 p-4">
 
   <h3 className="font-semibold mb-3">
     Delivery Instructions
@@ -250,7 +305,15 @@ outline-none
   </div>
 
   {/* No Contact */}
-  <div className="bg-card border rounded-2xl p-4">
+  <div className="bg-card/80
+backdrop-blur-xl
+border
+border-border/60
+rounded-2xl
+shadow-lg
+hover:shadow-xl
+transition-all
+duration-300 p-4">
     <label className="flex items-start gap-4 cursor-pointer">
 <input
   type="checkbox"
@@ -303,7 +366,15 @@ outline-none
   </div>
 
  {/* Bill */}
-<div className="bg-card border rounded-2xl p-4">
+<div className="bg-card/80
+backdrop-blur-xl
+border
+border-border/60
+rounded-2xl
+shadow-lg
+hover:shadow-xl
+transition-all
+duration-300 p-4">
   <h3 className="font-bold mb-4">
     Bill Details
   </h3>
@@ -358,13 +429,18 @@ font-semibold
   <Button
 className="
 w-full
-h-12
-text-sm
+h-14
+text-base
 font-semibold
-rounded-xl
+rounded-2xl
 bg-primary
-hover:scale-[1.01]
+shadow-lg
+shadow-primary/20
+hover:scale-[1.02]
+hover:shadow-xl
+hover:shadow-primary/30
 transition-all
+duration-300
 "
 >
     Proceed to Payment
@@ -373,7 +449,7 @@ transition-all
 </div>
 </div>
       
-      </main>
+      </motion.main>
     </>
   );
 }
