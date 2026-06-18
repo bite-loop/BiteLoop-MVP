@@ -223,7 +223,6 @@ const total =
     </div>
   </div>
 
-  {/* Suggestions */}
  {/* Suggestions */}
 <div className="bg-card border rounded-2xl p-4">
 

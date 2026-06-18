@@ -21,7 +21,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
       displayOrder: 1,
       items: [
         {
-          id: "item_1",
+          id: "butter_chicken",
           name: "Butter Chicken",
           description: "Creamy tomato curry with tender chicken pieces",
           price: 18.99,
@@ -39,7 +39,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
           numberOfRatings: 245
         },
         {
-          id: "item_2",
+          id: "chicken_biryani",
           name: "Chicken Biryani",
           description: "Aromatic basmati rice with spices and chicken",
           price: 16.99,
@@ -57,7 +57,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
           numberOfRatings: 189
         },
         {
-          id: "item_3",
+          id: "garlic_naan",
           name: "Garlic Naan",
           description: "Soft bread with garlic and butter",
           price: 3.99,
@@ -82,7 +82,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
       displayOrder: 2,
       items: [
         {
-          id: "item_4",
+          id: "samosas",
           name: "Samosas",
           description: "Crispy pastry filled with spiced potatoes and peas",
           price: 7.99,
@@ -109,7 +109,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
       displayOrder: 1,
       items: [
         {
-          id: "item_1",
+          id: "california_roll",
           name: "California Roll",
           description: "Crab, avocado, cucumber",
           price: 12.99,
@@ -136,7 +136,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
       displayOrder: 1,
       items: [
         {
-          id: "item_1",
+          id: "smoked_meat_sandwich",
           name: "Smoked Meat Sandwich",
           description: "Famous Montreal smoked meat on rye bread",
           price: 14.99,
@@ -163,7 +163,7 @@ const mockMenus: Record<string, MenuCategory[]> = {
       displayOrder: 1,
       items: [
         {
-          id: "item_1",
+          id: "classic_poutine",
           name: "Classic Poutine",
           description: "Fries, cheese curds, gravy",
           price: 9.99,
