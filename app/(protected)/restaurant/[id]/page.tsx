@@ -193,10 +193,19 @@ export default function RestaurantPage({ params }: RestaurantPageProps) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [showCartResetModal, setShowCartResetModal] =
+  useState(false);
+
+const [pendingItem, setPendingItem] =
+  useState<any>(null);
+
 const {
   cart,
+  restaurantId: cartRestaurantId,
   addToCart,
   removeFromCart,
+  clearCart,
   getItemCount,
   getTotal,
 } = useCartStore();
@@ -227,6 +236,26 @@ const {
     );
   }
 
+  const handleAddToCart = (item: any) => {
+  const hasItems = cart.size > 0;
+
+  const differentRestaurant =
+    cartRestaurantId &&
+    cartRestaurantId !== restaurant.id;
+
+  if (hasItems && differentRestaurant) {
+    setPendingItem(item);
+    setShowCartResetModal(true);
+    return;
+  }
+
+  addToCart(
+    item,
+    restaurant.id,
+    restaurant.name
+  );
+};
+
   const menuCategories = restaurantId ? mockMenus[restaurantId] || [] : [];
 const cartItemCount = getItemCount();
 const cartTotal = getTotal();
@@ -244,18 +273,73 @@ const cartTotal = getTotal();
 <MenuSection
   menuCategories={menuCategories}
   cart={cart}
-  addToCart={(item) =>
-    addToCart(
-      item,
-      restaurant.id,
-      restaurant.name
-    )
-  }
+addToCart={handleAddToCart}
   removeFromCart={removeFromCart}
 />
           </div>
         </div>
       </div>
+
+{showCartResetModal && (
+  <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="bg-card border rounded-3xl p-6 w-full max-w-md shadow-2xl">
+
+      <h2 className="text-xl font-bold mb-2">
+        Items already in cart
+      </h2>
+
+      <p className="text-muted-foreground mb-6">
+        Your cart contains items from another restaurant.
+        Would you like to clear your current cart and
+        start a new order from this restaurant?
+      </p>
+
+      <div className="flex gap-3">
+        <button
+          onClick={() =>
+            setShowCartResetModal(false)
+          }
+          className="
+          flex-1
+          border
+          rounded-xl
+          py-3
+          font-medium
+          "
+        >
+          Keep Current Cart
+        </button>
+
+        <button
+          onClick={() => {
+            clearCart();
+
+            if (pendingItem) {
+              addToCart(
+                pendingItem,
+                restaurant.id,
+                restaurant.name
+              );
+            }
+
+            setPendingItem(null);
+            setShowCartResetModal(false);
+          }}
+          className="
+          flex-1
+          bg-primary
+          text-white
+          rounded-xl
+          py-3
+          font-medium
+          "
+        >
+          Start Fresh
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
                 {cartItemCount > 0 && (
   <FloatingCartBar
