@@ -12,6 +12,7 @@ import MenuSection from "@/components/restaurant/menu-section";
 import FloatingCartBar from "@/components/restaurant/floating-cart-bar";
 import { useCartStore } from "@/lib/stores/cartStore";
 import type { Restaurant, MenuCategory } from "@/types/restaurant";
+import { motion, AnimatePresence } from "framer-motion";
 
 const mockMenus: Record<string, MenuCategory[]> = {
   "rest_1": [
@@ -280,66 +281,122 @@ addToCart={handleAddToCart}
         </div>
       </div>
 
-{showCartResetModal && (
-  <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div className="bg-card border rounded-3xl p-6 w-full max-w-md shadow-2xl">
+<AnimatePresence>
+  {showCartResetModal && (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
 
-      <h2 className="text-xl font-bold mb-2">
-        Items already in cart
-      </h2>
+      <motion.div
+        initial={{
+          opacity: 0,
+          scale: 0.92,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0.95,
+          y: 10,
+        }}
+        transition={{
+          duration: 0.2,
+          ease: "easeOut",
+        }}
+        className="
+        w-full
+        max-w-[380px]
+        bg-background
+        border
+        border-border
+        shadow-[0_20px_60px_rgba(0,0,0,0.35)]
+        p-6
+        "
+      >
 
-      <p className="text-muted-foreground mb-6">
-        Your cart contains items from another restaurant.
-        Would you like to clear your current cart and
-        start a new order from this restaurant?
-      </p>
+        <h2 className="
+        text-xl
+        font-black
+        tracking-tight
+        mb-5
+        ">
+          Items already in cart
+        </h2>
 
-      <div className="flex gap-3">
-        <button
-          onClick={() =>
-            setShowCartResetModal(false)
-          }
-          className="
-          flex-1
-          border
-          rounded-xl
-          py-3
-          font-medium
-          "
-        >
-          Keep Current Cart
-        </button>
+        <p className="
+        text-sm
+        text-muted-foreground
+        leading-relaxed
+        mb-6
+        max-w-[420px]
+        ">
+          Your cart contains items from another restaurant.
+          Would you like to clear your cart and start a
+          new order from{" "}
+          <span className="font-semibold text-foreground">
+            {restaurant.name}
+          </span>
+          ?
+        </p>
 
-        <button
-          onClick={() => {
-            clearCart();
+        <div className="grid grid-cols-2 gap-3">
 
-            if (pendingItem) {
-              addToCart(
-                pendingItem,
-                restaurant.id,
-                restaurant.name
-              );
-            }
+          <button
+            onClick={() => setShowCartResetModal(false)}
+            className="
+            h-10
+            border
+            border-border
+            font-semibold
+            text-sm
+            hover:bg-muted
+            hover:scale-[1.02]
+            active:scale-[0.98]
+            transition-all
+            "
+          >
+            Keep Cart
+          </button>
 
-            setPendingItem(null);
-            setShowCartResetModal(false);
-          }}
-          className="
-          flex-1
-          bg-primary
-          text-white
-          rounded-xl
-          py-3
-          font-medium
-          "
-        >
-          Start Fresh
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              clearCart();
+
+              if (pendingItem) {
+                addToCart(
+                  pendingItem,
+                  restaurant.id,
+                  restaurant.name
+                );
+              }
+
+              setPendingItem(null);
+              setShowCartResetModal(false);
+            }}
+            className="
+            h-10
+            bg-primary
+            text-white
+            font-bold
+            text-sm
+            hover:opacity-90
+            hover:scale-[1.02]
+            active:scale-[0.98]
+            transition-all
+            "
+          >
+            Start Fresh
+          </button>
+
+        </div>
+
+      </motion.div>
+
     </div>
-  </div>
-)}
+  )}
+</AnimatePresence>
 
                 {cartItemCount > 0 && (
   <FloatingCartBar
