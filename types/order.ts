@@ -117,6 +117,25 @@ export type PaymentMethod =
   | 'cash'
   | 'netbanking';
 
+  // ============ CHECKOUT DATA ============
+export interface CheckoutData {
+  restaurantName: string;
+
+  items: CartItem[];
+
+  address: Address | null;
+
+  noContact: boolean;
+  suggestions: string;
+
+  itemTotal: number;
+  deliveryFee: number;
+  serviceFee: number;
+  tax: number;
+
+  total: number;
+}  
+
 // ============ COUPONS & DISCOUNTS ============
 export interface Coupon {
   id: string;
