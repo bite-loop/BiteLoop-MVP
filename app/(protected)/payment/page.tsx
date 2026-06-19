@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion ,AnimatePresence} from "framer-motion";
 import Confetti from "react-confetti";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -24,9 +25,16 @@ export default function PaymentPage() {
   const [paymentMethod, setPaymentMethod] =
     useState("card");
 
+    const [expandedMethod, setExpandedMethod] =
+  useState<string | null>("upi");
+
+  const [upiOption, setUpiOption] =
+  useState("gpay");
+
   const [showSuccess, setShowSuccess] =
     useState(false);
 
+    
   useEffect(() => {
     if (!checkoutData) {
       router.push("/checkout");
@@ -35,23 +43,38 @@ export default function PaymentPage() {
 
   if (!checkoutData) return null;
 
-  const methods = [
-    {
-      id: "card",
-      title: "Credit / Debit Card",
-      icon: CreditCard,
-    },
-    {
-      id: "gpay",
-      title: "Google Pay",
-      icon: Wallet,
-    },
-    {
-      id: "cod",
-      title: "Cash On Delivery",
-      icon: Banknote,
-    },
-  ];
+const methods = [
+  {
+    id: "wallet",
+    title: "Wallets",
+    icon: Wallet,
+    subtitle: "Paytm, Amazon Pay, PhonePe",
+  },
+  {
+    id: "card",
+    title: "Add Credit or Debit Cards",
+    icon: CreditCard,
+    subtitle: "Visa, Mastercard, RuPay",
+  },
+  {
+    id: "netbanking",
+    title: "Netbanking",
+    icon: Banknote,
+    subtitle: "All major banks",
+  },
+  {
+    id: "upi",
+    title: "UPI",
+    icon: Wallet,
+    subtitle: "Google Pay, PhonePe, BHIM",
+  },
+  {
+    id: "cash",
+    title: "Cash",
+    icon: Banknote,
+    subtitle: "Pay on delivery",
+  },
+];
 
   return (
     <>
@@ -222,9 +245,19 @@ shadow-lg
   const Icon = method.icon;
 
   return (
+    <div key={method.id}>
+
     <button
-      key={method.id}
-      onClick={() => setPaymentMethod(method.id)}
+      
+      onClick={() => {
+  setPaymentMethod(method.id);
+
+  setExpandedMethod(
+    expandedMethod === method.id
+      ? null
+      : method.id
+  );
+}}
       className={`
       w-full
       flex
@@ -245,91 +278,157 @@ shadow-lg
       }
       `}
     >
-      <div className="flex items-center gap-4">
-        <Icon size={20} />
+<div className="flex items-center gap-4">
+  <Icon size={20} />
 
-        <span className="font-medium">
-          {method.title}
+  <div className="text-left">
+    <p className="font-semibold">
+      {method.title}
+    </p>
+
+    <p className="text-xs text-muted-foreground">
+      {method.subtitle}
+    </p>
+  </div>
+</div>
+
+{expandedMethod === method.id ? (
+  <ChevronDown size={20} />
+) : (
+  <ChevronRight size={20} />
+)}
+
+    </button>
+{expandedMethod === method.id &&
+  method.id === "upi" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="
+      mt-4
+      rounded-2xl
+      border
+      bg-muted/20
+      p-5
+      "
+    >
+      <h3 className="font-semibold text-lg">
+        Scan QR to pay
+      </h3>
+
+      <p className="text-sm text-muted-foreground mt-2">
+        Use any UPI app on your phone to scan and pay
+      </p>
+
+      <div className="flex items-center gap-3 mt-4">
+        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
+          Google Pay
+        </div>
+
+        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
+          PhonePe
+        </div>
+
+        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
+          Paytm
+        </div>
+
+        <span className="text-sm text-muted-foreground">
+          or others
         </span>
       </div>
 
-      <div
-        className={`
-        w-5
-        h-5
-        rounded-full
-        border-2
+<div
+  className="
+  mt-6
+  relative
+  h-[290px]
+  w-[290px]
+  rounded-2xl
+  bg-zinc-800
+  overflow-hidden
+  flex
+  items-center
+  justify-center
+  "
+>
+  {/* QR Image */}
+  <img
+    src="/qr-placeholder.png"
+    alt="QR Code"
+    className="
+    h-[250px]
+    w-[250px]
+    object-contain
+    "
+  />
 
-        ${
-          paymentMethod === method.id
-            ? "bg-primary border-primary"
-            : "border-muted-foreground"
-        }
-        `}
-      />
-    </button>
+  {/* Generate Button */}
+  <button
+    className="
+    absolute
+    px-6
+    py-3
+    rounded-2xl
+    bg-primary
+    text-white
+    font-semibold
+    shadow-lg
+    hover:scale-105
+    transition-all
+    duration-300
+    "
+  >
+    Generate QR
+  </button>
+</div>
+    </motion.div>
+)}
+
+{expandedMethod === method.id &&
+  method.id === "cash" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="
+      mt-4
+      rounded-2xl
+      border
+      bg-muted/20
+      p-5
+      "
+    >
+      <p className="text-sm text-muted-foreground">
+        Please keep exact change handy to help us serve you better.
+      </p>
+
+      <Button
+        onClick={() => setShowSuccess(true)}
+        className="
+        w-full
+        h-14
+        mt-4
+        rounded-2xl
+        font-semibold
+        "
+      >
+        Place Order
+      </Button>
+    </motion.div>
+)}
+    </div>
   );
+  
 })}
 
               </div>
-<Button
-  onClick={() => setShowSuccess(true)}
-className="
-w-full
-h-14
-text-base
-font-semibold
-rounded-2xl
-bg-primary
-shadow-lg
-shadow-primary/20
-hover:scale-[1.01]
-hover:shadow-xl
-hover:shadow-primary/30
-transition-all
-duration-300
-mt-6
-"
->
-  {paymentMethod === "cod"
-    ? "Place Order"
-    : `Pay $${checkoutData.total.toFixed(2)}`}
-</Button>
-</motion.div>
-
+    </motion.div>
 </div>
 </div>
 
 </motion.main>
-
-{showSuccess && (
-  <div
-    className="
-    fixed
-    inset-0
-    z-[100]
-    bg-black/40
-    flex
-    items-center
-    justify-center
-    "
-  >
-
-<Confetti
-  recycle={false}
-  numberOfPieces={300}
-  gravity={0.45}
-  initialVelocityY={20}
-  initialVelocityX={14}
-  tweenDuration={3000}
-/>
-
-    <motion.div>
-      ...
-    </motion.div>
-
-  </div>
-)}
 
       {/* Success Modal */}
       <AnimatePresence>
@@ -343,6 +442,14 @@ flex
 items-center
 justify-center
 ">
+  <Confetti
+  recycle={false}
+  numberOfPieces={300}
+  gravity={0.45}
+  initialVelocityY={20}
+  initialVelocityX={14}
+  tweenDuration={3000}
+/>
 
       <motion.div
   initial={{
