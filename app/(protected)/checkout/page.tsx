@@ -15,13 +15,17 @@ import type { Address } from "@/types/user";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useCheckoutStore } from "@/lib/stores/checkoutStore";
+import AddressDrawer from "@/components/address/AddressDrawer";
 
 export default function CheckoutPage() {
  const [selectedAddress, setSelectedAddress] =
   useState<string>("");
   const [noContact, setNoContact] = useState(false);
   const [suggestions, setSuggestions] = useState("");
+const [showAddressDrawer, setShowAddressDrawer] =
+  useState(false);
 
+  
   const router = useRouter();
 
 const { setCheckoutData } =
@@ -218,7 +222,10 @@ const selectedAddressData =
   </div>
 
   <div className="mt-6">
-    <button className="border border-dashed rounded-xl p-4 w-full text-left hover:border-primary transition">
+    <button
+  onClick={() => setShowAddressDrawer(true)}
+  className="border border-dashed rounded-xl p-4 w-full text-left hover:border-primary transition"
+>
       <div className="flex items-center gap-3">
         <Plus />
 
@@ -496,6 +503,10 @@ font-semibold
 </div>
       
       </motion.main>
+      <AddressDrawer
+  open={showAddressDrawer}
+  onClose={() => setShowAddressDrawer(false)}
+/>
     </>
   );
 }
