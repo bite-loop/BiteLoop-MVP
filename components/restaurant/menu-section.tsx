@@ -4,10 +4,11 @@ import { Filter, X } from "lucide-react";
 import type { MenuCategory, MenuItem } from "@/types/restaurant";
 import { Button } from "@/components/ui/button";
 import MenuItemCard from "./menu-item-card";
+import type { CartItem } from "@/types/order";
 
 interface MenuSectionProps {
   menuCategories: MenuCategory[];
-  cart: Map<string, { item: MenuItem; quantity: number }>;
+cart: Map<string, CartItem>;
   addToCart: (item: MenuItem) => void;
   removeFromCart: (itemId: string) => void;
 }

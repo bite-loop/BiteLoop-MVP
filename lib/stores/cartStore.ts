@@ -1,10 +1,8 @@
 import { create } from "zustand";
 import type { MenuItem } from "@/types/restaurant";
+import type { CartItem } from "@/types/order";
 
-interface CartItem {
-  item: MenuItem;
-  quantity: number;
-}
+
 
 interface CartStore {
   restaurantId: string | null;
@@ -37,16 +35,25 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
     const existing = newCart.get(item.id);
 
-    if (existing) {
-      newCart.set(item.id, {
-        ...existing,
-        quantity: existing.quantity + 1,
-      });
-    } else {
-      newCart.set(item.id, {
-        item,
-        quantity: 1,
-      });
+if (existing) {
+  newCart.set(item.id, {
+    ...existing,
+    quantity: existing.quantity + 1,
+    totalPrice:
+      existing.basePrice *
+      (existing.quantity + 1),
+  });
+} else {
+newCart.set(item.id, {
+  id: item.id,
+  menuItemId: item.id,
+  name: item.name,
+  image: item.images[0] || "",
+  basePrice: item.price,
+  quantity: 1,
+  customizations: [],
+  totalPrice: item.price,
+});
     }
 
     set({
@@ -67,6 +74,9 @@ export const useCartStore = create<CartStore>((set, get) => ({
       newCart.set(itemId, {
         ...existing,
         quantity: existing.quantity - 1,
+totalPrice:
+  existing.basePrice *
+  (existing.quantity - 1),
       });
     } else {
       newCart.delete(itemId);
@@ -90,7 +100,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
   getTotal: () =>
     Array.from(get().cart.values()).reduce(
-      (sum, item) => sum + item.item.price * item.quantity,
+      (sum, item) => sum + item.totalPrice ,
       0
     ),
 }));
