@@ -4,11 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import type { Address } from "@/types/user";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/lib/stores/authStore";
 
 const ADDR_LABELS = ["Home","Work","Parents","Other"];
 
 const CITIES  = ["Mumbai","Delhi","Bangalore","Hyderabad","Chennai","Kolkata","Pune","Ahmedabad","Kochi","Jaipur"];
 const STATES  = ["Maharashtra","Delhi","Karnataka","Telangana","Tamil Nadu","West Bengal","Rajasthan","Gujarat","Kerala"];
+
 
 interface AddressDrawerProps {
   open: boolean;
@@ -20,6 +22,7 @@ export default function AddressDrawer({
   onClose,
 }: AddressDrawerProps) {
     const [address, setAddress] = useState<Address>({
+        
   id: `addr_${Date.now()}`,
   label: "Home",
   fullAddress: "",
@@ -32,6 +35,12 @@ export default function AddressDrawer({
   isDefault: false,
   deliveryInstructions: "",
 });
+const {
+  user,
+  fetchProfile,
+} = useAuthStore();
+
+
 
 const inp =
   "w-full bg-transparent border-b border-border/40 focus:border-red-500 focus:outline-none text-sm py-2";
@@ -45,8 +54,85 @@ const inp =
     [key]: value,
   }));
 };
+const handleSaveAddress = async () => {
+  if (!user) return;
+
+  try {
+    const updatedProfile = {
+      ...user,
+      savedAddresses: [
+        ...(user.savedAddresses || []),
+        address,
+      ],
+    };
+
+    const response = await fetch(
+      "/api/user/profile",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify(
+          updatedProfile
+        ),
+      }
+    );
+
+    if (response.ok) {
+      await fetchProfile();
+      onClose();
+    }
+  } catch (error) {
+    console.error(
+      "Error saving address:",
+      error
+    );
+  }
+};
   return (
     <AnimatePresence>
+        <div className="px-4 pb-4 border-t border-border/20 pt-4 space-y-4"/>
+        <div
+  className="
+  border
+  rounded-xl
+  overflow-hidden
+  border-border/40
+  mx-4
+  mt-4
+  "
+>
+  <div
+    className="
+    w-full
+    flex
+    items-center
+    gap-3
+    px-4
+    py-3
+    "
+  >
+    <span>
+      {address.label === "Home" && "🏠"}
+      {address.label === "Work" && "💼"}
+      {address.label === "Parents" && "👨‍👩‍👧"}
+      {!["Home", "Work", "Parents"].includes(
+        address.label
+      ) && "📍"}
+    </span>
+
+    <div className="flex-1 min-w-0">
+      <p className="text-sm font-semibold">
+        {address.label}
+      </p>
+
+      <p className="text-xs opacity-35 truncate">
+        {address.fullAddress || "—"}
+      </p>
+    </div>
+  </div></div>
       {open && (
         <>
           {/* Overlay */}
@@ -98,21 +184,21 @@ const inp =
       </p>
     </div>
 
-    <button
-      onClick={onClose}
-      className="
-      h-10
-      w-10
-      rounded-full
-      border
-      flex
-      items-center
-      justify-center
-      hover:bg-muted
-      "
-    >
-      ✕
-    </button>
+<button
+  onClick={onClose}
+  className="
+  h-10
+  w-10
+  rounded-full
+  border
+  flex
+  items-center
+  justify-center
+  hover:bg-muted
+  "
+>
+  ✕
+</button>
   </div>
 </div>
 
@@ -160,11 +246,13 @@ const inp =
 
         </div>
         <Button
+  onClick={handleSaveAddress}
   className="
-  w-full
-  h-12
-  mt-4
-  rounded-xl
+w-[calc(100%-2rem)]
+mx-4
+h-12
+mb-4
+rounded-xl
   "
 >
   Save Address

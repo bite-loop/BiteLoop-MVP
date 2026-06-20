@@ -37,7 +37,10 @@ const {
   getTotal,
   removeFromCart,
 } = useCartStore();
-const { user } = useAuthStore();
+const {
+  user,
+  fetchProfile,
+} = useAuthStore();
 
 const addresses = (user?.savedAddresses ?? []) as Address[];
 
