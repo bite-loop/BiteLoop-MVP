@@ -15,11 +15,13 @@ const STATES  = ["Maharashtra","Delhi","Karnataka","Telangana","Tamil Nadu","Wes
 interface AddressDrawerProps {
   open: boolean;
   onClose: () => void;
+  onAddressAdded?: () => void;
 }
 
 export default function AddressDrawer({
   open,
   onClose,
+  onAddressAdded,
 }: AddressDrawerProps) {
     const [address, setAddress] = useState<Address>({
         
@@ -80,10 +82,11 @@ const handleSaveAddress = async () => {
       }
     );
 
-    if (response.ok) {
-      await fetchProfile();
-      onClose();
-    }
+if (response.ok) {
+  await fetchProfile();
+  onAddressAdded?.();
+  onClose();
+}
   } catch (error) {
     console.error(
       "Error saving address:",
@@ -93,46 +96,7 @@ const handleSaveAddress = async () => {
 };
   return (
     <AnimatePresence>
-        <div className="px-4 pb-4 border-t border-border/20 pt-4 space-y-4"/>
-        <div
-  className="
-  border
-  rounded-xl
-  overflow-hidden
-  border-border/40
-  mx-4
-  mt-4
-  "
->
-  <div
-    className="
-    w-full
-    flex
-    items-center
-    gap-3
-    px-4
-    py-3
-    "
-  >
-    <span>
-      {address.label === "Home" && "🏠"}
-      {address.label === "Work" && "💼"}
-      {address.label === "Parents" && "👨‍👩‍👧"}
-      {!["Home", "Work", "Parents"].includes(
-        address.label
-      ) && "📍"}
-    </span>
-
-    <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold">
-        {address.label}
-      </p>
-
-      <p className="text-xs opacity-35 truncate">
-        {address.fullAddress || "—"}
-      </p>
-    </div>
-  </div></div>
+        
       {open && (
         <>
           {/* Overlay */}
@@ -202,6 +166,45 @@ const handleSaveAddress = async () => {
   </div>
 </div>
 
+<div
+  className="
+  border
+  rounded-xl
+  overflow-hidden
+  border-border/40
+  mx-4
+  mt-4
+  "
+>
+  <div
+    className="
+    flex
+    items-center
+    gap-3
+    px-4
+    py-3
+    "
+  >
+    <span>
+      {address.label === "Home" && "🏠"}
+      {address.label === "Work" && "💼"}
+      {address.label === "Parents" && "👨‍👩‍👧"}
+      {!["Home", "Work", "Parents"].includes(
+        address.label
+      ) && "📍"}
+    </span>
+
+    <div className="flex-1 min-w-0">
+      <p className="text-sm font-semibold">
+        {address.label}
+      </p>
+
+      <p className="text-xs opacity-35 truncate">
+        {address.fullAddress || "—"}
+      </p>
+    </div>
+  </div>
+
         <div className="px-4 pb-4 border-t border-border/20 pt-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -244,6 +247,7 @@ const handleSaveAddress = async () => {
             <input className={inp} value={address.deliveryInstructions ?? ""} onChange={e => update("deliveryInstructions", e.target.value)} />
           </div>
 
+        </div>
         </div>
         <Button
   onClick={handleSaveAddress}

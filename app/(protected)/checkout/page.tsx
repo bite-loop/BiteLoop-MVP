@@ -44,6 +44,7 @@ const {
 
 const addresses = (user?.savedAddresses ?? []) as Address[];
 
+
 useEffect(() => {
   const defaultAddress =
     addresses.find((a) => a.isDefault);
@@ -506,9 +507,13 @@ font-semibold
 </div>
       
       </motion.main>
-      <AddressDrawer
+
+<AddressDrawer
   open={showAddressDrawer}
-  onClose={() => setShowAddressDrawer(false)}
+  onClose={() =>
+    setShowAddressDrawer(false)
+  }
+
 />
     </>
   );
