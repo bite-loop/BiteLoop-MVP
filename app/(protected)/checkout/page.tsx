@@ -273,7 +273,7 @@ duration-300 p-4 shadow-sm">
 
 <div className="w-12 h-px bg-border my-4" />
     <div className="space-y-4">
-{cartItems.map(({ item, quantity }) => (
+{cartItems.map((item) => (
 <div
   key={item.id}
   className="flex items-center justify-between"
@@ -284,13 +284,13 @@ duration-300 p-4 shadow-sm">
     </p>
 
     <p className="text-xs text-muted-foreground">
-      Qty {quantity}
+      Qty {item.quantity}
     </p>
   </div>
 
   <div className="flex items-center gap-3">
     <p className="font-semibold">
-      ${(item.price * quantity).toFixed(2)}
+      ${item.totalPrice.toFixed(2)}
     </p>
 
     <button
