@@ -40,7 +40,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     }
 
     if (user && (pathname === '/login' || pathname === '/signup')) {
-      router.replace('/feed')
+      router.replace('/')
     }
   }, [isChecking, isLoading, user, pathname, router])
 

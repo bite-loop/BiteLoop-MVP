@@ -11,7 +11,7 @@ import { useAuthStore } from "@/lib/stores/authStore";
 
 const NAV_LINKS = [
   { label: "About Us", href: "#" },
-  { label: "Partner With Us", href: "#" },
+  { label: "Partner With Us", href: "https://bite-loo-p-restaurant-mvp.vercel.app/onboarding" },
 ];
 
 export default function Navbar() {
