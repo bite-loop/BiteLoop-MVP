@@ -22,14 +22,11 @@ export default function PaymentPage() {
   const { checkoutData } =
     useCheckoutStore();
 
-  const [paymentMethod, setPaymentMethod] =
-    useState("card");
+    const [paymentMethod, setPaymentMethod] =
+  useState("applepay");
 
 const [expandedMethod, setExpandedMethod] =
-  useState<string | null>(null);
-
-  const [upiOption, setUpiOption] =
-  useState("gpay");
+useState("applepay");
 
   const [showSuccess, setShowSuccess] =
     useState(false);
@@ -45,34 +42,32 @@ const [expandedMethod, setExpandedMethod] =
 
 const methods = [
   {
-    id: "wallet",
-    title: "Wallets",
+    id: "applepay",
+    title: "Apple Pay",
     icon: Wallet,
-    subtitle: "Paytm, Amazon Pay, PhonePe",
+    subtitle: "Fast & Secure",
+    badge: "Recommended",
+  },
+  {
+    id: "googlepay",
+    title: "Google Pay",
+    icon: Wallet,
+    subtitle: "Pay in seconds",
+    badge: "Popular",
   },
   {
     id: "card",
-    title: "Add Credit or Debit Cards",
+    title: "Credit / Debit Card",
     icon: CreditCard,
-    subtitle: "Visa, Mastercard, RuPay",
-  },
-  {
-    id: "netbanking",
-    title: "Netbanking",
-    icon: Banknote,
-    subtitle: "All major banks",
-  },
-  {
-    id: "upi",
-    title: "UPI",
-    icon: Wallet,
-    subtitle: "Google Pay, PhonePe, BHIM",
+    subtitle: "Visa, Mastercard, AmEx, Interac",
+    badge: "Secure",
   },
   {
     id: "cash",
-    title: "Cash",
+    title: "Cash on Delivery",
     icon: Banknote,
-    subtitle: "Pay on delivery",
+    subtitle: "Pay when your order arrives",
+    badge: "",
   },
 ];
 
@@ -179,9 +174,44 @@ Change
                 {checkoutData.address?.fullAddress}
               </p>
 
-              <p className="text-sm text-primary mt-4">
-                Estimated Delivery: 25-35 mins
-              </p>
+<div
+className="
+mt-5
+flex
+items-center
+justify-between
+"
+>
+
+<div>
+
+<p className="text-xs text-muted-foreground">
+Delivery Type
+</p>
+
+<p className="font-medium">
+
+{checkoutData.noContact
+? "No-contact Delivery"
+: "Hand it to me"}
+
+</p>
+
+</div>
+
+<div>
+
+<p className="text-xs text-muted-foreground">
+ETA
+</p>
+
+<p className="font-medium">
+25-35 mins
+</p>
+
+</div>
+
+</div>
 
             </div>
 
@@ -223,6 +253,16 @@ shadow-lg
 Choose Payment Method
 </h2>
 
+<div className="mt-4 rounded-2xl border bg-green-500/5 p-4">
+  <p className="font-semibold">
+    🔒 Secure Checkout
+  </p>
+
+  <p className="mt-1 text-sm text-muted-foreground">
+    All payments are encrypted and securely processed.
+  </p>
+</div>
+
 <p className="mt-1 text-sm text-muted-foreground">
 Select your preferred payment option.
 </p>
@@ -239,10 +279,6 @@ Select your preferred payment option.
 
     <button
       
-onClick={() => {
-  setPaymentMethod(method.id);
-  setExpandedMethod(method.id);
-}}
 className={`
 w-full
 flex
@@ -294,9 +330,33 @@ paymentMethod === method.id
       {method.title}
     </p>
 
-    <p className="mt-1 text-xs text-muted-foreground">
-      {method.subtitle}
-    </p>
+<div className="mt-1 flex items-center gap-2">
+
+<p className="text-xs text-muted-foreground">
+    {method.subtitle}
+</p>
+
+{method.badge && (
+
+<span
+className="
+rounded-full
+bg-primary/10
+px-2
+py-0.5
+text-[10px]
+font-semibold
+text-primary
+"
+>
+
+{method.badge}
+
+</span>
+
+)}
+
+</div>
 
   </div>
 
@@ -316,8 +376,10 @@ paymentMethod === method.id
 </motion.div>
 
     </button>
+
+
 {expandedMethod === method.id &&
-  method.id === "upi" && (
+  method.id === "card" && (
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
@@ -327,141 +389,37 @@ paymentMethod === method.id
       rounded-2xl
       border
       bg-muted/20
-      p-5
+      p-6
       "
     >
       <h3 className="font-semibold text-lg">
-        Scan QR to pay
+        Secure Card Payment
       </h3>
 
-      <p className="text-sm text-muted-foreground mt-2">
-        Use any UPI app on your phone to scan and pay
+      <p className="mt-2 text-sm text-muted-foreground">
+        Your payment will be processed securely through our payment partner.
       </p>
 
-<div className="mt-5 flex flex-wrap gap-3">
+      <div className="mt-5 flex flex-wrap gap-3">
 
-{[
-  {
-    id: "gpay",
-    label: "Google Pay",
-  },
-  {
-    id: "phonepe",
-    label: "PhonePe",
-  },
-  {
-    id: "paytm",
-    label: "Paytm",
-  },
-  {
-    id: "bhim",
-    label: "BHIM",
-  },
-].map((app) => (
+        <div className="rounded-xl border px-4 py-2">
+          Visa
+        </div>
 
-<button
-key={app.id}
-onClick={() => setUpiOption(app.id)}
-className={`
-rounded-xl
-px-4
-py-2
-text-sm
-font-semibold
-transition-all
-duration-300
+        <div className="rounded-xl border px-4 py-2">
+          Mastercard
+        </div>
 
-${
-upiOption === app.id
-? "bg-primary text-white shadow-lg"
-: "border hover:border-primary hover:bg-primary/5"
-}
-`}
->
+        <div className="rounded-xl border px-4 py-2">
+          RuPay
+        </div>
 
-{app.label}
+        <div className="rounded-xl border px-4 py-2">
+          AmEx
+        </div>
 
-</button>
+      </div>
 
-))}
-
-</div>
-
-<div
-  className="
-  mt-6
-  relative
-  h-[290px]
-  w-[290px]
-  rounded-2xl
-  bg-zinc-800
-  overflow-hidden
-  flex
-  items-center
-  justify-center
-  "
->
-  {/* QR Image */}
-  <img
-    src="/qr-placeholder.png"
-    alt="QR Code"
-    className="
-    h-[250px]
-    w-[250px]
-    object-contain
-    "
-  />
-
-  {/* Generate Button */}
-<div
-className="
-mt-6
-rounded-3xl
-border
-bg-card
-p-6
-"
->
-
-<div className="flex justify-between">
-
-<div>
-
-<p className="text-xs text-muted-foreground">
-Amount
-</p>
-
-<p className="font-bold text-2xl">
-₹{checkoutData.total.toFixed(2)}
-</p>
-
-</div>
-
-<div className="text-right">
-
-<p className="text-xs text-muted-foreground">
-Selected
-</p>
-
-<p className="font-semibold capitalize">
-{upiOption}
-</p>
-
-</div>
-
-</div>
-
-<div className="mt-6 flex justify-center">
-
-<img
-src="/qr-placeholder.png"
-className="h-56 w-56 rounded-2xl"
-/>
-
-</div>
-
-</div>
-</div>
     </motion.div>
 )}
 
@@ -784,7 +742,10 @@ duration-300
 
 
     )}
+    
 </AnimatePresence>
+
+
 </>
 );
 }
