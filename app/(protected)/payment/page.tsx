@@ -22,14 +22,11 @@ export default function PaymentPage() {
   const { checkoutData } =
     useCheckoutStore();
 
-  const [paymentMethod, setPaymentMethod] =
-    useState("card");
+    const [paymentMethod, setPaymentMethod] =
+  useState("applepay");
 
-    const [expandedMethod, setExpandedMethod] =
-  useState<string | null>("upi");
-
-  const [upiOption, setUpiOption] =
-  useState("gpay");
+const [expandedMethod, setExpandedMethod] =
+  useState<string | null>("applepay");
 
   const [showSuccess, setShowSuccess] =
     useState(false);
@@ -45,34 +42,32 @@ export default function PaymentPage() {
 
 const methods = [
   {
-    id: "wallet",
-    title: "Wallets",
+    id: "applepay",
+    title: "Apple Pay",
     icon: Wallet,
-    subtitle: "Paytm, Amazon Pay, PhonePe",
+    subtitle: "Fast & Secure",
+    badge: "Recommended",
+  },
+  {
+    id: "googlepay",
+    title: "Google Pay",
+    icon: Wallet,
+    subtitle: "Pay in seconds",
+    badge: "Popular",
   },
   {
     id: "card",
-    title: "Add Credit or Debit Cards",
+    title: "Credit / Debit Card",
     icon: CreditCard,
-    subtitle: "Visa, Mastercard, RuPay",
-  },
-  {
-    id: "netbanking",
-    title: "Netbanking",
-    icon: Banknote,
-    subtitle: "All major banks",
-  },
-  {
-    id: "upi",
-    title: "UPI",
-    icon: Wallet,
-    subtitle: "Google Pay, PhonePe, BHIM",
+    subtitle: "Visa, Mastercard, AmEx, Interac",
+    badge: "Secure",
   },
   {
     id: "cash",
-    title: "Cash",
+    title: "Cash on Delivery",
     icon: Banknote,
-    subtitle: "Pay on delivery",
+    subtitle: "Pay when your order arrives",
+    badge: "",
   },
 ];
 
@@ -97,7 +92,7 @@ max-w-7xl
 mx-auto
 px-6
 pt-28
-pb-10
+pb-[140px]
 min-h-screen
 bg-gradient-to-b
 from-background
@@ -118,21 +113,58 @@ to-primary/5
             Choose a payment method and confirm your order.
           </p>
         </div>
+<div
+  className="
+  mx-auto
+  grid
+  max-w-7xl
+  gap-8
+  lg:grid-cols-[minmax(0,1fr)_380px]
+  items-start
+  "
+>
 
-        <div className="max-w-4xl mx-auto">
+{/* LEFT COLUMN */}
 
-          {/* LEFT */}
-          <div className="space-y-6">
+<div className="space-y-6">
 
             {/* Delivery Address */}
             <div className="bg-card border rounded-2xl p-6">
 
-              <div className="flex items-center gap-3 mb-4">
-                <MapPin size={20} />
-                <h2 className="font-bold text-lg">
-                  Delivering To
-                </h2>
-              </div>
+<div className="flex items-start justify-between mb-5">
+
+<div className="flex items-center gap-3">
+
+<MapPin
+className="text-primary"
+size={20}
+/>
+
+<div>
+
+<h2 className="font-bold text-lg">
+Delivering To
+</h2>
+
+<p className="text-xs text-muted-foreground">
+Delivery Address
+</p>
+
+</div>
+
+</div>
+
+<Button
+variant="ghost"
+size="sm"
+className="rounded-xl"
+>
+
+Change
+
+</Button>
+
+</div>
 
               <h3 className="font-semibold">
                 {checkoutData.address?.label}
@@ -142,68 +174,48 @@ to-primary/5
                 {checkoutData.address?.fullAddress}
               </p>
 
-              <p className="text-sm text-primary mt-4">
-                Estimated Delivery: 25-35 mins
-              </p>
+<div
+className="
+mt-5
+flex
+items-center
+justify-between
+"
+>
+
+<div>
+
+<p className="text-xs text-muted-foreground">
+Delivery Type
+</p>
+
+<p className="font-medium">
+
+{checkoutData.noContact
+? "No-contact Delivery"
+: "Hand it to me"}
+
+</p>
+
+</div>
+
+<div>
+
+<p className="text-xs text-muted-foreground">
+ETA
+</p>
+
+<p className="font-medium">
+25-35 mins
+</p>
+
+</div>
+
+</div>
 
             </div>
 
-<div
-  className="
-  relative
-  overflow-hidden
-  bg-primary
-  rounded-2xl
-  p-6
-  shadow-xl
-  "
->
-  <div className="relative z-10">
-    <p className="text-white/70 text-xs uppercase tracking-[0.25em]">
-      Total Payable
-    </p>
 
-    <h2 className="text-4xl font-black text-white mt-2">
-      ${checkoutData.total.toFixed(2)}
-    </h2>
-
-    <p className="text-white/80 text-sm mt-2">
-      {checkoutData.restaurantName}
-    </p>
-
-    <div className="mt-5 flex items-center gap-2">
-      <div className="h-2 w-2 rounded-full bg-green-400" />
-
-      <span className="text-sm text-white/80">
-        Ready to place your order
-      </span>
-    </div>
-  </div>
-
-  <div
-    className="
-    absolute
-    -right-8
-    -top-8
-    h-28
-    w-28
-    rounded-full
-    bg-white/10
-    "
-  />
-
-  <div
-    className="
-    absolute
-    -right-2
-    bottom-0
-    h-16
-    w-16
-    rounded-full
-    bg-white/5
-    "
-  />
-</div>
             {/* Payment Methods */}
 <motion.div
 initial={{
@@ -235,9 +247,27 @@ shadow-lg
 "
 >
 
-              <h2 className="font-bold text-lg mb-5">
-                Payment Method
-              </h2>
+<div className="mb-6">
+
+<h2 className="text-2xl font-bold">
+Choose Payment Method
+</h2>
+
+<div className="mt-4 rounded-2xl border bg-green-500/5 p-4">
+  <p className="font-semibold">
+    🔒 Secure Checkout
+  </p>
+
+  <p className="mt-1 text-sm text-muted-foreground">
+    All payments are encrypted and securely processed.
+  </p>
+</div>
+
+<p className="mt-1 text-sm text-muted-foreground">
+Select your preferred payment option.
+</p>
+
+</div>
 
               <div className="space-y-3">
 
@@ -247,60 +277,159 @@ shadow-lg
   return (
     <div key={method.id}>
 
-    <button
-      
-      onClick={() => {
-  setPaymentMethod(method.id);
+<button
+  onClick={() => {
+    setPaymentMethod(method.id);
 
-  setExpandedMethod(
-    expandedMethod === method.id
-      ? null
-      : method.id
-  );
-}}
-      className={`
-      w-full
-      flex
-      items-center
-      justify-between
-      p-5
-      border
-      rounded-2xl
-      transition-all
-      duration-300
-      hover:border-primary
-      hover:-translate-y-1
+    setExpandedMethod(
+      expandedMethod === method.id
+        ? null
+        : method.id
+    );
+  }}
 
-      ${
-        paymentMethod === method.id
-          ? "border-primary bg-primary/5 shadow-md ring-2 ring-primary/20 "
-          : ""
-      }
-      `}
+  
+className={`
+w-full
+flex
+items-center
+justify-between
+rounded-3xl
+border
+border-border
+bg-card
+p-5
+transition-all
+duration-300
+hover:-translate-y-1
+hover:border-primary
+hover:shadow-xl
+hover:shadow-primary/10
+
+${
+paymentMethod === method.id
+? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-lg"
+: ""
+}
+`}
     >
 <div className="flex items-center gap-4">
-  <Icon size={20} />
+
+  <div
+    className={`
+      flex
+      h-12
+      w-12
+      items-center
+      justify-center
+      rounded-2xl
+      transition-all
+      ${
+        paymentMethod === method.id
+          ? "bg-primary text-white shadow-lg"
+          : "bg-primary/10 text-primary"
+      }
+    `}
+  >
+    <Icon size={22} />
+  </div>
 
   <div className="text-left">
-    <p className="font-semibold">
+
+    <p className="font-semibold text-[15px]">
       {method.title}
     </p>
 
-    <p className="text-xs text-muted-foreground">
-      {method.subtitle}
-    </p>
-  </div>
-</div>
+<div className="mt-1 flex items-center gap-2">
 
-{expandedMethod === method.id ? (
-  <ChevronDown size={20} />
-) : (
-  <ChevronRight size={20} />
+<p className="text-xs text-muted-foreground">
+    {method.subtitle}
+</p>
+
+{method.badge && (
+
+<span
+className="
+rounded-full
+bg-primary/10
+px-2
+py-0.5
+text-[10px]
+font-semibold
+text-primary
+"
+>
+
+{method.badge}
+
+</span>
+
 )}
 
+{paymentMethod === method.id && (
+  <span className="rounded-full bg-green-500/10 px-2 py-1 text-[10px] font-semibold text-green-600">
+    ✓ Selected
+  </span>
+)}
+
+</div>
+
+  </div>
+
+</div>
+<motion.div
+  animate={{
+    rotate: expandedMethod === method.id ? 90 : 0,
+  }}
+  transition={{
+    duration: 0.2,
+  }}
+>
+  <ChevronRight
+    size={20}
+    className="text-muted-foreground"
+  />
+</motion.div>
+
     </button>
+
 {expandedMethod === method.id &&
-  method.id === "upi" && (
+  method.id === "applepay" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="mt-4 rounded-2xl border bg-muted/20 p-6"
+    >
+      <h3 className="font-semibold text-lg">
+        Apple Pay
+      </h3>
+
+      <p className="mt-2 text-sm text-muted-foreground">
+        Pay instantly and securely using Apple Pay.
+      </p>
+    </motion.div>
+)}
+{expandedMethod === method.id &&
+  method.id === "googlepay" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="mt-4 rounded-2xl border bg-muted/20 p-6"
+    >
+      <h3 className="font-semibold text-lg">
+        Google Pay
+      </h3>
+
+      <p className="mt-2 text-sm text-muted-foreground">
+        Fast and secure payment using Google Pay.
+      </p>
+    </motion.div>
+)}
+
+{expandedMethod === method.id &&
+  method.id === "card" && (
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
@@ -310,79 +439,37 @@ shadow-lg
       rounded-2xl
       border
       bg-muted/20
-      p-5
+      p-6
       "
     >
       <h3 className="font-semibold text-lg">
-        Scan QR to pay
+        Secure Card Payment
       </h3>
 
-      <p className="text-sm text-muted-foreground mt-2">
-        Use any UPI app on your phone to scan and pay
+      <p className="mt-2 text-sm text-muted-foreground">
+        Your payment will be processed securely through our payment partner.
       </p>
 
-      <div className="flex items-center gap-3 mt-4">
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          Google Pay
+      <div className="mt-5 flex flex-wrap gap-3">
+
+        <div className="rounded-xl border px-4 py-2">
+          Visa
         </div>
 
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          PhonePe
+        <div className="rounded-xl border px-4 py-2">
+          Mastercard
         </div>
 
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          Paytm
+        <div className="rounded-xl border px-4 py-2">
+          Interac Debit
         </div>
 
-        <span className="text-sm text-muted-foreground">
-          or others
-        </span>
+        <div className="rounded-xl border px-4 py-2">
+          AmEx
+        </div>
+
       </div>
 
-<div
-  className="
-  mt-6
-  relative
-  h-[290px]
-  w-[290px]
-  rounded-2xl
-  bg-zinc-800
-  overflow-hidden
-  flex
-  items-center
-  justify-center
-  "
->
-  {/* QR Image */}
-  <img
-    src="/qr-placeholder.png"
-    alt="QR Code"
-    className="
-    h-[250px]
-    w-[250px]
-    object-contain
-    "
-  />
-
-  {/* Generate Button */}
-  <button
-    className="
-    absolute
-    px-6
-    py-3
-    rounded-2xl
-    bg-primary
-    text-white
-    font-semibold
-    shadow-lg
-    hover:scale-105
-    transition-all
-    duration-300
-    "
-  >
-    Generate QR
-  </button>
-</div>
     </motion.div>
 )}
 
@@ -404,18 +491,6 @@ shadow-lg
         Please keep exact change handy to help us serve you better.
       </p>
 
-      <Button
-        onClick={() => setShowSuccess(true)}
-        className="
-        w-full
-        h-14
-        mt-4
-        rounded-2xl
-        font-semibold
-        "
-      >
-        Place Order
-      </Button>
     </motion.div>
 )}
     </div>
@@ -426,10 +501,219 @@ shadow-lg
               </div>
     </motion.div>
 </div>
+
+{/* RIGHT COLUMN */}
+
+<div
+  className="
+  lg:sticky
+  lg:top-28
+  space-y-6
+  "
+>
+
+  <motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  className="
+  rounded-3xl
+  border
+  border-border/60
+  bg-card
+  shadow-xl
+  overflow-hidden
+"
+>
+  {/* Header */}
+  <div className="bg-primary p-6 text-white">
+    <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+      ORDER SUMMARY
+    </p>
+
+    <h2 className="mt-2 text-4xl font-black">
+      ₹{checkoutData.total.toFixed(2)}
+    </h2>
+
+    <p className="mt-2 text-white/80">
+      {checkoutData.restaurantName}
+    </p>
+  </div>
+
+  {/* Body */}
+<div className="space-y-5 p-6">
+
+<h3 className="font-semibold text-lg">
+Your Order
+</h3>
+
+<div className="space-y-4">
+
+{checkoutData.items.map((item) => (
+
+<div
+key={item.id}
+className="flex items-center justify-between"
+>
+
+<div className="flex items-center gap-3">
+
+<img
+src={item.image}
+alt={item.name}
+className="h-12 w-12 rounded-xl object-cover"
+/>
+
+<div>
+
+<p className="font-medium">
+{item.name}
+</p>
+
+<p className="text-xs text-muted-foreground">
+
+Qty {item.quantity}
+
+</p>
+
+</div>
+
+</div>
+
+<p className="font-semibold">
+
+${item.totalPrice.toFixed(2)}
+
+</p>
+
+</div>
+
+))}
+
+</div>
+
+<div className="border-t pt-5 space-y-3">
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Item Total
+
+</span>
+
+<span>
+
+${checkoutData.itemTotal.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Delivery Fee
+
+</span>
+
+<span>
+
+{checkoutData.deliveryFee === 0
+? "FREE"
+: `$${checkoutData.deliveryFee.toFixed(2)}`}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Platform Fee
+
+</span>
+
+<span>
+
+${checkoutData.serviceFee.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Tax
+
+</span>
+
+<span>
+
+${checkoutData.tax.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="border-t pt-3 flex justify-between text-lg font-bold">
+
+<span>Total</span>
+
+<span>
+
+${checkoutData.total.toFixed(2)}
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+</motion.div>
+</div>
+
 </div>
 
 </motion.main>
 
+<div
+  className="
+  fixed
+  bottom-0
+  left-0
+  right-0
+  h-24
+  border-t
+shadow-[0_-8px_30px_rgba(0,0,0,0.08)]
+  bg-background/95
+  backdrop-blur-xl
+  z-50
+  "
+>
+ <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6">
+    <div>
+      <p className="text-sm text-muted-foreground">
+        Total
+      </p>
+
+      <p className="text-2xl font-bold">
+        ${checkoutData.total.toFixed(2)}
+      </p>
+    </div>
+
+    <Button
+      className="h-14 rounded-2xl px-10"
+      onClick={() => setShowSuccess(true)}
+    >
+      Pay ${checkoutData.total.toFixed(2)}
+    </Button>
+  </div>
+</div>
       {/* Success Modal */}
       <AnimatePresence>
 {showSuccess && (
@@ -537,8 +821,14 @@ duration-300
         </motion.div>
 
       </div>
+      
+
+
     )}
+    
 </AnimatePresence>
+
+
 </>
 );
 }
