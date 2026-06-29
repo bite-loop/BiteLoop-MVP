@@ -26,7 +26,7 @@ export default function PaymentPage() {
   useState("applepay");
 
 const [expandedMethod, setExpandedMethod] =
-useState("applepay");
+  useState<string | null>("applepay");
 
   const [showSuccess, setShowSuccess] =
     useState(false);
@@ -92,7 +92,7 @@ max-w-7xl
 mx-auto
 px-6
 pt-28
-pb-10
+pb-[140px]
 min-h-screen
 bg-gradient-to-b
 from-background
@@ -277,8 +277,18 @@ Select your preferred payment option.
   return (
     <div key={method.id}>
 
-    <button
-      
+<button
+  onClick={() => {
+    setPaymentMethod(method.id);
+
+    setExpandedMethod(
+      expandedMethod === method.id
+        ? null
+        : method.id
+    );
+  }}
+
+  
 className={`
 w-full
 flex
@@ -356,6 +366,12 @@ text-primary
 
 )}
 
+{paymentMethod === method.id && (
+  <span className="rounded-full bg-green-500/10 px-2 py-1 text-[10px] font-semibold text-green-600">
+    ✓ Selected
+  </span>
+)}
+
 </div>
 
   </div>
@@ -377,6 +393,40 @@ text-primary
 
     </button>
 
+{expandedMethod === method.id &&
+  method.id === "applepay" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="mt-4 rounded-2xl border bg-muted/20 p-6"
+    >
+      <h3 className="font-semibold text-lg">
+        Apple Pay
+      </h3>
+
+      <p className="mt-2 text-sm text-muted-foreground">
+        Pay instantly and securely using Apple Pay.
+      </p>
+    </motion.div>
+)}
+{expandedMethod === method.id &&
+  method.id === "googlepay" && (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="mt-4 rounded-2xl border bg-muted/20 p-6"
+    >
+      <h3 className="font-semibold text-lg">
+        Google Pay
+      </h3>
+
+      <p className="mt-2 text-sm text-muted-foreground">
+        Fast and secure payment using Google Pay.
+      </p>
+    </motion.div>
+)}
 
 {expandedMethod === method.id &&
   method.id === "card" && (
@@ -411,7 +461,7 @@ text-primary
         </div>
 
         <div className="rounded-xl border px-4 py-2">
-          RuPay
+          Interac Debit
         </div>
 
         <div className="rounded-xl border px-4 py-2">
@@ -631,6 +681,39 @@ ${checkoutData.total.toFixed(2)}
 
 </motion.main>
 
+<div
+  className="
+  fixed
+  bottom-0
+  left-0
+  right-0
+  h-24
+  border-t
+shadow-[0_-8px_30px_rgba(0,0,0,0.08)]
+  bg-background/95
+  backdrop-blur-xl
+  z-50
+  "
+>
+ <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6">
+    <div>
+      <p className="text-sm text-muted-foreground">
+        Total
+      </p>
+
+      <p className="text-2xl font-bold">
+        ${checkoutData.total.toFixed(2)}
+      </p>
+    </div>
+
+    <Button
+      className="h-14 rounded-2xl px-10"
+      onClick={() => setShowSuccess(true)}
+    >
+      Pay ${checkoutData.total.toFixed(2)}
+    </Button>
+  </div>
+</div>
       {/* Success Modal */}
       <AnimatePresence>
 {showSuccess && (
