@@ -25,8 +25,8 @@ export default function PaymentPage() {
   const [paymentMethod, setPaymentMethod] =
     useState("card");
 
-    const [expandedMethod, setExpandedMethod] =
-  useState<string | null>("upi");
+const [expandedMethod, setExpandedMethod] =
+  useState<string | null>(null);
 
   const [upiOption, setUpiOption] =
   useState("gpay");
@@ -118,21 +118,58 @@ to-primary/5
             Choose a payment method and confirm your order.
           </p>
         </div>
+<div
+  className="
+  mx-auto
+  grid
+  max-w-7xl
+  gap-8
+  lg:grid-cols-[minmax(0,1fr)_380px]
+  items-start
+  "
+>
 
-        <div className="max-w-4xl mx-auto">
+{/* LEFT COLUMN */}
 
-          {/* LEFT */}
-          <div className="space-y-6">
+<div className="space-y-6">
 
             {/* Delivery Address */}
             <div className="bg-card border rounded-2xl p-6">
 
-              <div className="flex items-center gap-3 mb-4">
-                <MapPin size={20} />
-                <h2 className="font-bold text-lg">
-                  Delivering To
-                </h2>
-              </div>
+<div className="flex items-start justify-between mb-5">
+
+<div className="flex items-center gap-3">
+
+<MapPin
+className="text-primary"
+size={20}
+/>
+
+<div>
+
+<h2 className="font-bold text-lg">
+Delivering To
+</h2>
+
+<p className="text-xs text-muted-foreground">
+Delivery Address
+</p>
+
+</div>
+
+</div>
+
+<Button
+variant="ghost"
+size="sm"
+className="rounded-xl"
+>
+
+Change
+
+</Button>
+
+</div>
 
               <h3 className="font-semibold">
                 {checkoutData.address?.label}
@@ -148,62 +185,7 @@ to-primary/5
 
             </div>
 
-<div
-  className="
-  relative
-  overflow-hidden
-  bg-primary
-  rounded-2xl
-  p-6
-  shadow-xl
-  "
->
-  <div className="relative z-10">
-    <p className="text-white/70 text-xs uppercase tracking-[0.25em]">
-      Total Payable
-    </p>
 
-    <h2 className="text-4xl font-black text-white mt-2">
-      ${checkoutData.total.toFixed(2)}
-    </h2>
-
-    <p className="text-white/80 text-sm mt-2">
-      {checkoutData.restaurantName}
-    </p>
-
-    <div className="mt-5 flex items-center gap-2">
-      <div className="h-2 w-2 rounded-full bg-green-400" />
-
-      <span className="text-sm text-white/80">
-        Ready to place your order
-      </span>
-    </div>
-  </div>
-
-  <div
-    className="
-    absolute
-    -right-8
-    -top-8
-    h-28
-    w-28
-    rounded-full
-    bg-white/10
-    "
-  />
-
-  <div
-    className="
-    absolute
-    -right-2
-    bottom-0
-    h-16
-    w-16
-    rounded-full
-    bg-white/5
-    "
-  />
-</div>
             {/* Payment Methods */}
 <motion.div
 initial={{
@@ -235,9 +217,17 @@ shadow-lg
 "
 >
 
-              <h2 className="font-bold text-lg mb-5">
-                Payment Method
-              </h2>
+<div className="mb-6">
+
+<h2 className="text-2xl font-bold">
+Choose Payment Method
+</h2>
+
+<p className="mt-1 text-sm text-muted-foreground">
+Select your preferred payment option.
+</p>
+
+</div>
 
               <div className="space-y-3">
 
@@ -249,54 +239,81 @@ shadow-lg
 
     <button
       
-      onClick={() => {
+onClick={() => {
   setPaymentMethod(method.id);
-
-  setExpandedMethod(
-    expandedMethod === method.id
-      ? null
-      : method.id
-  );
+  setExpandedMethod(method.id);
 }}
-      className={`
-      w-full
-      flex
-      items-center
-      justify-between
-      p-5
-      border
-      rounded-2xl
-      transition-all
-      duration-300
-      hover:border-primary
-      hover:-translate-y-1
+className={`
+w-full
+flex
+items-center
+justify-between
+rounded-3xl
+border
+border-border
+bg-card
+p-5
+transition-all
+duration-300
+hover:-translate-y-1
+hover:border-primary
+hover:shadow-xl
+hover:shadow-primary/10
 
-      ${
-        paymentMethod === method.id
-          ? "border-primary bg-primary/5 shadow-md ring-2 ring-primary/20 "
-          : ""
-      }
-      `}
+${
+paymentMethod === method.id
+? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-lg"
+: ""
+}
+`}
     >
 <div className="flex items-center gap-4">
-  <Icon size={20} />
+
+  <div
+    className={`
+      flex
+      h-12
+      w-12
+      items-center
+      justify-center
+      rounded-2xl
+      transition-all
+      ${
+        paymentMethod === method.id
+          ? "bg-primary text-white shadow-lg"
+          : "bg-primary/10 text-primary"
+      }
+    `}
+  >
+    <Icon size={22} />
+  </div>
 
   <div className="text-left">
-    <p className="font-semibold">
+
+    <p className="font-semibold text-[15px]">
       {method.title}
     </p>
 
-    <p className="text-xs text-muted-foreground">
+    <p className="mt-1 text-xs text-muted-foreground">
       {method.subtitle}
     </p>
-  </div>
-</div>
 
-{expandedMethod === method.id ? (
-  <ChevronDown size={20} />
-) : (
-  <ChevronRight size={20} />
-)}
+  </div>
+
+</div>
+<motion.div
+  animate={{
+    rotate: expandedMethod === method.id ? 90 : 0,
+  }}
+  transition={{
+    duration: 0.2,
+  }}
+>
+  <ChevronRight
+    size={20}
+    className="text-muted-foreground"
+  />
+</motion.div>
 
     </button>
 {expandedMethod === method.id &&
@@ -321,23 +338,54 @@ shadow-lg
         Use any UPI app on your phone to scan and pay
       </p>
 
-      <div className="flex items-center gap-3 mt-4">
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          Google Pay
-        </div>
+<div className="mt-5 flex flex-wrap gap-3">
 
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          PhonePe
-        </div>
+{[
+  {
+    id: "gpay",
+    label: "Google Pay",
+  },
+  {
+    id: "phonepe",
+    label: "PhonePe",
+  },
+  {
+    id: "paytm",
+    label: "Paytm",
+  },
+  {
+    id: "bhim",
+    label: "BHIM",
+  },
+].map((app) => (
 
-        <div className="px-3 py-2 border rounded-lg text-sm font-medium">
-          Paytm
-        </div>
+<button
+key={app.id}
+onClick={() => setUpiOption(app.id)}
+className={`
+rounded-xl
+px-4
+py-2
+text-sm
+font-semibold
+transition-all
+duration-300
 
-        <span className="text-sm text-muted-foreground">
-          or others
-        </span>
-      </div>
+${
+upiOption === app.id
+? "bg-primary text-white shadow-lg"
+: "border hover:border-primary hover:bg-primary/5"
+}
+`}
+>
+
+{app.label}
+
+</button>
+
+))}
+
+</div>
 
 <div
   className="
@@ -365,23 +413,54 @@ shadow-lg
   />
 
   {/* Generate Button */}
-  <button
-    className="
-    absolute
-    px-6
-    py-3
-    rounded-2xl
-    bg-primary
-    text-white
-    font-semibold
-    shadow-lg
-    hover:scale-105
-    transition-all
-    duration-300
-    "
-  >
-    Generate QR
-  </button>
+<div
+className="
+mt-6
+rounded-3xl
+border
+bg-card
+p-6
+"
+>
+
+<div className="flex justify-between">
+
+<div>
+
+<p className="text-xs text-muted-foreground">
+Amount
+</p>
+
+<p className="font-bold text-2xl">
+₹{checkoutData.total.toFixed(2)}
+</p>
+
+</div>
+
+<div className="text-right">
+
+<p className="text-xs text-muted-foreground">
+Selected
+</p>
+
+<p className="font-semibold capitalize">
+{upiOption}
+</p>
+
+</div>
+
+</div>
+
+<div className="mt-6 flex justify-center">
+
+<img
+src="/qr-placeholder.png"
+className="h-56 w-56 rounded-2xl"
+/>
+
+</div>
+
+</div>
 </div>
     </motion.div>
 )}
@@ -404,18 +483,6 @@ shadow-lg
         Please keep exact change handy to help us serve you better.
       </p>
 
-      <Button
-        onClick={() => setShowSuccess(true)}
-        className="
-        w-full
-        h-14
-        mt-4
-        rounded-2xl
-        font-semibold
-        "
-      >
-        Place Order
-      </Button>
     </motion.div>
 )}
     </div>
@@ -426,6 +493,182 @@ shadow-lg
               </div>
     </motion.div>
 </div>
+
+{/* RIGHT COLUMN */}
+
+<div
+  className="
+  lg:sticky
+  lg:top-28
+  space-y-6
+  "
+>
+
+  <motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  className="
+  rounded-3xl
+  border
+  border-border/60
+  bg-card
+  shadow-xl
+  overflow-hidden
+"
+>
+  {/* Header */}
+  <div className="bg-primary p-6 text-white">
+    <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+      ORDER SUMMARY
+    </p>
+
+    <h2 className="mt-2 text-4xl font-black">
+      ₹{checkoutData.total.toFixed(2)}
+    </h2>
+
+    <p className="mt-2 text-white/80">
+      {checkoutData.restaurantName}
+    </p>
+  </div>
+
+  {/* Body */}
+<div className="space-y-5 p-6">
+
+<h3 className="font-semibold text-lg">
+Your Order
+</h3>
+
+<div className="space-y-4">
+
+{checkoutData.items.map((item) => (
+
+<div
+key={item.id}
+className="flex items-center justify-between"
+>
+
+<div className="flex items-center gap-3">
+
+<img
+src={item.image}
+alt={item.name}
+className="h-12 w-12 rounded-xl object-cover"
+/>
+
+<div>
+
+<p className="font-medium">
+{item.name}
+</p>
+
+<p className="text-xs text-muted-foreground">
+
+Qty {item.quantity}
+
+</p>
+
+</div>
+
+</div>
+
+<p className="font-semibold">
+
+${item.totalPrice.toFixed(2)}
+
+</p>
+
+</div>
+
+))}
+
+</div>
+
+<div className="border-t pt-5 space-y-3">
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Item Total
+
+</span>
+
+<span>
+
+${checkoutData.itemTotal.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Delivery Fee
+
+</span>
+
+<span>
+
+{checkoutData.deliveryFee === 0
+? "FREE"
+: `$${checkoutData.deliveryFee.toFixed(2)}`}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Platform Fee
+
+</span>
+
+<span>
+
+${checkoutData.serviceFee.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="flex justify-between">
+
+<span className="text-muted-foreground">
+
+Tax
+
+</span>
+
+<span>
+
+${checkoutData.tax.toFixed(2)}
+
+</span>
+
+</div>
+
+<div className="border-t pt-3 flex justify-between text-lg font-bold">
+
+<span>Total</span>
+
+<span>
+
+${checkoutData.total.toFixed(2)}
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+</motion.div>
+</div>
+
 </div>
 
 </motion.main>
@@ -537,6 +780,9 @@ duration-300
         </motion.div>
 
       </div>
+      
+
+
     )}
 </AnimatePresence>
 </>
