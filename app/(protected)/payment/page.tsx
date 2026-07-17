@@ -16,6 +16,7 @@ import { motion ,AnimatePresence} from "framer-motion";
 import Confetti from "react-confetti";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import PaymentModal from "@/components/payment/PaymentModal";
+import OrderSuccessOverlay from "@/components/orders/OrderSuccessOverlay";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -23,11 +24,11 @@ export default function PaymentPage() {
   const { checkoutData } =
     useCheckoutStore();
 
-    const [paymentMethod, setPaymentMethod] =
-  useState("applepay");
+const [paymentMethod, setPaymentMethod] =
+  useState("online");
 
 const [expandedMethod, setExpandedMethod] =
-  useState<string | null>("applepay");
+  useState<string | null>("online");
 
   const [showSuccess, setShowSuccess] =
     useState(false);
@@ -35,6 +36,7 @@ const [expandedMethod, setExpandedMethod] =
     const [clientSecret, setClientSecret] = useState("");
 const [showPaymentModal, setShowPaymentModal] = useState(false);
 const [loadingPayment, setLoadingPayment] = useState(false);
+const [showOrderSuccess, setShowOrderSuccess] = useState(false);
 
   useEffect(() => {
     if (!checkoutData) {
@@ -46,25 +48,12 @@ const [loadingPayment, setLoadingPayment] = useState(false);
 
 const methods = [
   {
-    id: "applepay",
-    title: "Apple Pay",
-    icon: Wallet,
-    subtitle: "Fast & Secure",
-    badge: "Recommended",
-  },
-  {
-    id: "googlepay",
-    title: "Google Pay",
-    icon: Wallet,
-    subtitle: "Pay in seconds",
-    badge: "Popular",
-  },
-  {
-    id: "card",
-    title: "Credit / Debit Card",
+    id: "online",
+    title: "Pay Online",
     icon: CreditCard,
-    subtitle: "Visa, Mastercard, AmEx, Interac",
-    badge: "Secure",
+    subtitle:
+      "Powered by Stripe • Apple Pay • Google Pay • Visa • Mastercard • AmEx • Interac",
+    
   },
   {
     id: "cash",
@@ -409,9 +398,25 @@ text-primary
 )}
 
 {paymentMethod === method.id && (
-  <span className="rounded-full bg-green-500/10 px-2 py-1 text-[10px] font-semibold text-green-600">
-    ✓ Selected
-  </span>
+<span
+  className="
+  inline-flex
+  items-center
+  gap-1
+  rounded-full
+  border
+  border-primary/20
+  bg-primary/10
+  px-3
+  py-1
+  text-[11px]
+  font-semibold
+  text-primary
+"
+>
+  <CheckCircle2 className="h-3.5 w-3.5" />
+  Selected
+</span>
 )}
 
 </div>
@@ -470,48 +475,32 @@ text-primary
     </motion.div>
 )}
 
+
+
 {expandedMethod === method.id &&
-  method.id === "card" && (
+  method.id === "online" && (
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       exit={{ opacity: 0, height: 0 }}
-      className="
-      mt-4
-      rounded-2xl
-      border
-      bg-muted/20
-      p-6
-      "
+      className="mt-4 rounded-2xl border bg-muted/20 p-6"
     >
       <h3 className="font-semibold text-lg">
-        Secure Card Payment
+        Secure Online Payment
       </h3>
 
       <p className="mt-2 text-sm text-muted-foreground">
-        Your payment will be processed securely through our payment partner.
+        Powered by Stripe. Depending on your device and browser, you'll be able to pay using Apple Pay, Google Pay, Visa, Mastercard, American Express, or Interac Debit.
       </p>
 
       <div className="mt-5 flex flex-wrap gap-3">
-
-        <div className="rounded-xl border px-4 py-2">
-          Visa
-        </div>
-
-        <div className="rounded-xl border px-4 py-2">
-          Mastercard
-        </div>
-
-        <div className="rounded-xl border px-4 py-2">
-          Interac Debit
-        </div>
-
-        <div className="rounded-xl border px-4 py-2">
-          AmEx
-        </div>
-
+        <div className="rounded-xl border px-4 py-2">Apple Pay</div>
+        <div className="rounded-xl border px-4 py-2">Google Pay</div>
+        <div className="rounded-xl border px-4 py-2">Visa</div>
+        <div className="rounded-xl border px-4 py-2">Mastercard</div>
+        <div className="rounded-xl border px-4 py-2">AmEx</div>
+        <div className="rounded-xl border px-4 py-2">Interac Debit</div>
       </div>
-
     </motion.div>
 )}
 
@@ -749,13 +738,16 @@ shadow-[0_-8px_30px_rgba(0,0,0,0.08)]
     </div>
 
 <Button
-  className="h-14 rounded-2xl px-10"
+  className="h-14 rounded-2xl px-10 min-w-[180px]"
   onClick={handlePayment}
   disabled={loadingPayment}
 >
   {loadingPayment
     ? "Preparing..."
+    : paymentMethod === "cash"
+    ? "Place Order"
     : `Pay $${checkoutData.total.toFixed(2)}`}
+
 </Button>
   </div>
 </div>
@@ -874,12 +866,18 @@ duration-300
 </AnimatePresence>
 
 {clientSecret && (
-  <PaymentModal
-    open={showPaymentModal}
-    onOpenChange={setShowPaymentModal}
-    clientSecret={clientSecret}
-  />
+<PaymentModal
+  open={showPaymentModal}
+  onOpenChange={setShowPaymentModal}
+  clientSecret={clientSecret}
+  onSuccess={() => {
+    setShowOrderSuccess(true);
+  }}
+/>
 )}
+<OrderSuccessOverlay
+  open={showOrderSuccess}
+/>
 </>
 );
 }

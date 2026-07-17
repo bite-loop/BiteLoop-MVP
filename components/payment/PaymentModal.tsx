@@ -12,13 +12,16 @@ interface PaymentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   clientSecret: string;
+  onSuccess: () => void;
 }
 
 export default function PaymentModal({
   open,
   onOpenChange,
   clientSecret,
-}: PaymentModalProps) {
+  onSuccess,
+}: PaymentModalProps){
+  
   return (
     <Dialog
       open={open}
@@ -149,10 +152,12 @@ pb-10
 >
     <div className="mx-auto max-w-2xl">
       <StripeProvider clientSecret={clientSecret}>
-        <CheckoutForm
-          onSuccess={() => {
-            onOpenChange(false);
-          }}
+<CheckoutForm
+  onSuccess={() => {
+    onOpenChange(false);
+    onSuccess();
+  }}
+
         />
       </StripeProvider>
     </div>
