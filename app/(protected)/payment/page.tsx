@@ -15,6 +15,7 @@ import {
 import { motion ,AnimatePresence} from "framer-motion";
 import Confetti from "react-confetti";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import PaymentModal from "@/components/payment/PaymentModal";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -31,7 +32,10 @@ const [expandedMethod, setExpandedMethod] =
   const [showSuccess, setShowSuccess] =
     useState(false);
 
-    
+    const [clientSecret, setClientSecret] = useState("");
+const [showPaymentModal, setShowPaymentModal] = useState(false);
+const [loadingPayment, setLoadingPayment] = useState(false);
+
   useEffect(() => {
     if (!checkoutData) {
       router.push("/checkout");
@@ -70,6 +74,44 @@ const methods = [
     badge: "",
   },
 ];
+
+const handlePayment = async () => {
+  if (paymentMethod === "cash") {
+    setShowSuccess(true);
+    return;
+  }
+
+  try {
+    setLoadingPayment(true);
+
+    const response = await fetch(
+      "/api/payments/create-payment-intent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: checkoutData.total,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to create payment.");
+    }
+
+    setClientSecret(data.clientSecret);
+    setShowPaymentModal(true);
+  } catch (err) {
+    console.error(err);
+    alert("Unable to initialize payment.");
+  } finally {
+    setLoadingPayment(false);
+  }
+};
 
   return (
     <>
@@ -706,12 +748,15 @@ shadow-[0_-8px_30px_rgba(0,0,0,0.08)]
       </p>
     </div>
 
-    <Button
-      className="h-14 rounded-2xl px-10"
-      onClick={() => setShowSuccess(true)}
-    >
-      Pay ${checkoutData.total.toFixed(2)}
-    </Button>
+<Button
+  className="h-14 rounded-2xl px-10"
+  onClick={handlePayment}
+  disabled={loadingPayment}
+>
+  {loadingPayment
+    ? "Preparing..."
+    : `Pay $${checkoutData.total.toFixed(2)}`}
+</Button>
   </div>
 </div>
       {/* Success Modal */}
@@ -828,7 +873,13 @@ duration-300
     
 </AnimatePresence>
 
-
+{clientSecret && (
+  <PaymentModal
+    open={showPaymentModal}
+    onOpenChange={setShowPaymentModal}
+    clientSecret={clientSecret}
+  />
+)}
 </>
 );
 }
