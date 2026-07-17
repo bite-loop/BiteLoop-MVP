@@ -33,10 +33,12 @@ const { setCheckoutData } =
 
 const {
   cart,
+  restaurantId,
   restaurantName,
   getTotal,
   removeFromCart,
 } = useCartStore();
+
 const {
   user,
   fetchProfile,
@@ -107,8 +109,7 @@ const selectedAddressData =
   if (!selectedAddressData) return;
 
   setCheckoutData({
-    restaurantName:
-      restaurantName || "Restaurant",
+    restaurantName: restaurantName || "Restaurant",
 
     items: cartItems,
 
@@ -127,6 +128,8 @@ const selectedAddressData =
     tax,
 
     total,
+    restaurantId: restaurantId || "",
+    
   });
 
   router.push("/payment");
