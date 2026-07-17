@@ -8,6 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 interface CheckoutFormProps {
   onSuccess: () => void;
@@ -22,9 +23,9 @@ export default function CheckoutForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  async function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
 
     if (!stripe || !elements) return;
@@ -38,36 +39,56 @@ export default function CheckoutForm({
     });
 
     if (error) {
-      setError(error.message ?? "Payment failed");
+      setError(error.message ?? "Payment failed.");
       setLoading(false);
       return;
     }
 
     setLoading(false);
     onSuccess();
-  };
+  }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6"
+      className="space-y-8"
     >
       <PaymentElement />
 
       {error && (
-        <p className="text-sm text-red-500">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
           {error}
-        </p>
+        </div>
       )}
+
+      <div className="rounded-2xl bg-muted/40 p-5">
+        <div className="flex items-center gap-3">
+          <Lock className="h-5 w-5 text-green-600" />
+
+          <div>
+            <p className="font-semibold">
+              Secure Payment
+            </p>
+
+            <p className="text-sm text-muted-foreground">
+              Payments are encrypted and securely processed by Stripe.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <Button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full h-12 rounded-xl"
+        className="
+          h-16
+          w-full
+          rounded-2xl
+          text-lg
+          font-bold
+        "
       >
-        {loading
-          ? "Processing..."
-          : "Pay Securely"}
+        {loading ? "Processing Payment..." : "Pay Securely"}
       </Button>
     </form>
   );
