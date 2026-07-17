@@ -53,7 +53,18 @@ export default function CheckoutForm({
       onSubmit={handleSubmit}
       className="space-y-8"
     >
-      <PaymentElement />
+      <div
+  className="
+    rounded-3xl
+    border
+    border-border
+    bg-card
+    p-8
+    shadow-sm
+  "
+>
+  <PaymentElement />
+</div>
 
       {error && (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
@@ -61,12 +72,22 @@ export default function CheckoutForm({
         </div>
       )}
 
-      <div className="rounded-2xl bg-muted/40 p-5">
+      <div
+  className="
+    rounded-3xl
+    border
+    border-green-500/20
+    bg-gradient-to-r
+    from-green-500/5
+    to-emerald-500/5
+    p-6
+  "
+>
         <div className="flex items-center gap-3">
           <Lock className="h-5 w-5 text-green-600" />
 
           <div>
-            <p className="font-semibold">
+            <p className="text-lg font-bold">
               Secure Payment
             </p>
 
@@ -80,13 +101,27 @@ export default function CheckoutForm({
       <Button
         type="submit"
         disabled={!stripe || loading}
-        className="
-          h-16
-          w-full
-          rounded-2xl
-          text-lg
-          font-bold
-        "
+className="
+h-16
+w-full
+rounded-2xl
+
+bg-primary
+
+text-lg
+font-bold
+
+shadow-lg
+shadow-primary/20
+
+transition-all
+
+duration-300
+
+hover:scale-[1.01]
+hover:shadow-xl
+hover:shadow-primary/30
+"
       >
         {loading ? "Processing Payment..." : "Pay Securely"}
       </Button>
