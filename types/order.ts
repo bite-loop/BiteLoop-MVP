@@ -119,6 +119,7 @@ export type PaymentMethod =
 
   // ============ CHECKOUT DATA ============
 export interface CheckoutData {
+  restaurantId: string;
   restaurantName: string;
 
   items: CartItem[];
@@ -134,7 +135,7 @@ export interface CheckoutData {
   tax: number;
 
   total: number;
-}  
+}
 
 // ============ COUPONS & DISCOUNTS ============
 export interface Coupon {

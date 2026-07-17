@@ -17,6 +17,7 @@ import Confetti from "react-confetti";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import PaymentModal from "@/components/payment/PaymentModal";
 import OrderSuccessOverlay from "@/components/orders/OrderSuccessOverlay";
+import { createOrder } from "@/services/orders/createOrder";
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -110,9 +111,7 @@ const handlePayment = async () => {
   return (
     <>
       <Navbar />
-<Button onClick={() => setShowOrderSuccess(true)}>
-  Test Success Overlay
-</Button>
+
 <motion.main
   initial={{
     opacity: 0,
@@ -291,19 +290,6 @@ shadow-lg
 Choose Payment Method
 </h2>
 
-<div className="mt-4 rounded-2xl border bg-green-500/5 p-4">
-  <p className="font-semibold">
-    🔒 Secure Checkout
-  </p>
-
-  <p className="mt-1 text-sm text-muted-foreground">
-    All payments are encrypted and securely processed.
-  </p>
-</div>
-
-<p className="mt-1 text-sm text-muted-foreground">
-Select your preferred payment option.
-</p>
 
 </div>
 
@@ -873,13 +859,24 @@ duration-300
 </AnimatePresence>
 
 {clientSecret && (
+
 <PaymentModal
   open={showPaymentModal}
   onOpenChange={setShowPaymentModal}
   clientSecret={clientSecret}
-onSuccess={() => {
+onSuccess={async () => {
+  if (!checkoutData) return;
+
   setOrderStage("payment");
   setShowOrderSuccess(true);
+
+  setOrderStage("creating");
+
+  const result = await createOrder(checkoutData);
+
+  console.log(result);
+
+  setOrderStage("redirecting");
 }}
 />
 )}
