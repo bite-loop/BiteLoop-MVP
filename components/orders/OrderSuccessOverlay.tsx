@@ -2,12 +2,20 @@
 
 import { CheckCircle2, Loader2 } from "lucide-react";
 
+type OrderStage =
+  | "payment"
+  | "creating"
+  | "saving"
+  | "redirecting";
+
 interface OrderSuccessOverlayProps {
   open: boolean;
+  stage: OrderStage;
 }
 
 export default function OrderSuccessOverlay({
   open,
+  stage,
 }: OrderSuccessOverlayProps) {
   if (!open) return null;
 
@@ -35,12 +43,65 @@ export default function OrderSuccessOverlay({
           Your payment has been received successfully.
         </p>
 
-        <div className="mt-10 flex items-center justify-center gap-3 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
+<div className="mt-10 space-y-4">
+  <StatusRow
+    title="Payment received"
+    completed={true}
+    loading={false}
+  />
 
-          <span>Creating your order...</span>
-        </div>
+  <StatusRow
+    title="Creating your order"
+    completed={stage !== "payment"}
+    loading={stage === "creating"}
+  />
+
+  <StatusRow
+    title="Saving order"
+    completed={
+      stage === "redirecting"
+    }
+    loading={stage === "saving"}
+  />
+
+  <StatusRow
+    title="Redirecting"
+    completed={false}
+    loading={stage === "redirecting"}
+  />
+</div>
       </div>
+    </div>
+  );
+}
+function StatusRow({
+  title,
+  completed,
+  loading,
+}: {
+  title: string;
+  completed: boolean;
+  loading: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      {completed ? (
+        <CheckCircle2 className="h-5 w-5 text-primary" />
+      ) : loading ? (
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+      ) : (
+        <div className="h-5 w-5 rounded-full border-2 border-muted" />
+      )}
+
+      <span
+        className={
+          completed
+            ? "font-medium"
+            : "text-muted-foreground"
+        }
+      >
+        {title}
+      </span>
     </div>
   );
 }

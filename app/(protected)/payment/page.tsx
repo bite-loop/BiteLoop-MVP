@@ -37,6 +37,11 @@ const [expandedMethod, setExpandedMethod] =
 const [showPaymentModal, setShowPaymentModal] = useState(false);
 const [loadingPayment, setLoadingPayment] = useState(false);
 const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+const [orderStage, setOrderStage] =
+  useState<"payment" | "creating" | "saving" | "redirecting">(
+    "payment"
+  );
+
 
   useEffect(() => {
     if (!checkoutData) {
@@ -105,7 +110,9 @@ const handlePayment = async () => {
   return (
     <>
       <Navbar />
-
+<Button onClick={() => setShowOrderSuccess(true)}>
+  Test Success Overlay
+</Button>
 <motion.main
   initial={{
     opacity: 0,
@@ -870,13 +877,15 @@ duration-300
   open={showPaymentModal}
   onOpenChange={setShowPaymentModal}
   clientSecret={clientSecret}
-  onSuccess={() => {
-    setShowOrderSuccess(true);
-  }}
+onSuccess={() => {
+  setOrderStage("payment");
+  setShowOrderSuccess(true);
+}}
 />
 )}
 <OrderSuccessOverlay
   open={showOrderSuccess}
+  stage={orderStage}
 />
 </>
 );
