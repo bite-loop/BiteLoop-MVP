@@ -1,5 +1,6 @@
 "use client";
 
+import { useCartStore } from "@/lib/stores/cartStore";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar/navbar";
@@ -22,8 +23,12 @@ import { createOrder } from "@/services/orders/createOrder";
 export default function PaymentPage() {
   const router = useRouter();
 
-  const { checkoutData } =
-    useCheckoutStore();
+const {
+  checkoutData,
+  clearCheckoutData,
+} = useCheckoutStore();
+    
+const { clearCart } = useCartStore();
 
 const [paymentMethod, setPaymentMethod] =
   useState("online");
@@ -107,7 +112,22 @@ const handlePayment = async () => {
     setLoadingPayment(false);
   }
 };
+const handleTestOrder = async () => {
+  if (!checkoutData) return;
 
+  setShowOrderSuccess(true);
+  setOrderStage("payment");
+
+  setOrderStage("creating");
+
+const result = await createOrder(checkoutData);
+
+clearCart();
+
+setOrderStage("redirecting");
+
+router.push(`/orders/${result.orderId}`);
+};
   return (
     <>
       <Navbar />
@@ -136,7 +156,9 @@ from-background
 to-primary/5
 "
 >
-
+<Button onClick={handleTestOrder}>
+  Test Order Flow
+</Button>
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.25em] text-primary font-semibold">
             Payment
@@ -872,11 +894,14 @@ onSuccess={async () => {
 
   setOrderStage("creating");
 
-  const result = await createOrder(checkoutData);
+const result = await createOrder(checkoutData);
 
+setOrderStage("redirecting");
+
+router.push(`/orders/${result.orderId}`);
   console.log(result);
 
-  setOrderStage("redirecting");
+
 }}
 />
 )}
