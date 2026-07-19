@@ -17,12 +17,49 @@ import {
 import Navbar from "@/components/navbar/navbar";
 import { db } from "@/lib/firebase/config";
 import type { Order, OrderStatus } from "@/types/order";
+import Image from "next/image";
 
 export default function OrderDetailsPage() {
   const { orderId } = useParams();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+
+const formatPrice = (price:number)=>
+new Intl.NumberFormat("en-CA",{
+style:"currency",
+currency:"CAD",
+}).format(price);
+
+const paymentColor: Record<Order["paymentStatus"], string> = {
+completed:"text-green-600",
+pending:"text-yellow-600",
+processing:"text-blue-600",
+failed:"text-red-600",
+cancelled:"text-red-600",
+refunded:"text-orange-600"
+}
+
+const orderStatusColor: Record<OrderStatus, string> = {
+  pending: "text-yellow-600",
+  confirmed: "text-green-600",
+  preparing: "text-orange-500",
+  ready_for_pickup: "text-blue-600",
+  picked_up: "text-indigo-600",
+  in_transit: "text-purple-600",
+  delivered: "text-green-600",
+  cancelled: "text-red-600",
+};
+const orderStatusText: Record<OrderStatus, string> = {
+  pending: "Order Pending",
+  confirmed: "Order Confirmed",
+  preparing: "Preparing Food",
+  ready_for_pickup: "Ready for Pickup",
+  picked_up: "Picked Up",
+  in_transit: "Out for Delivery",
+  delivered: "Delivered",
+  cancelled: "Order Cancelled",
+};
 
   useEffect(() => {
     async function fetchOrder() {
@@ -68,41 +105,50 @@ export default function OrderDetailsPage() {
     );
   }
 
-  const statusSteps: OrderStatus[] = [
-    "confirmed",
-    "preparing",
-    "ready_for_pickup",
-    "in_transit",
-    "delivered",
-  ];
-
+const statusSteps: OrderStatus[] = [
+  "pending",
+  "confirmed",
+  "preparing",
+  "ready_for_pickup",
+  "picked_up",
+  "in_transit",
+  "delivered",
+];
   const currentStep = Math.max(
     statusSteps.indexOf(order.orderStatus),
     0
   );
 
-  const timeline = [
-    {
-      title: "Order Confirmed",
-      icon: CheckCircle2,
-    },
-    {
-      title: "Preparing Food",
-      icon: ChefHat,
-    },
-    {
-      title: "Ready for Pickup",
-      icon: Clock3,
-    },
-    {
-      title: "Out for Delivery",
-      icon: Bike,
-    },
-    {
-      title: "Delivered",
-      icon: PackageCheck,
-    },
-  ];
+const timeline = [
+  {
+    title: "Order Pending",
+    icon: Clock3,
+  },
+  {
+    title: "Order Confirmed",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Preparing Food",
+    icon: ChefHat,
+  },
+  {
+    title: "Ready for Pickup",
+    icon: PackageCheck,
+  },
+  {
+    title: "Picked Up",
+    icon: Bike,
+  },
+  {
+    title: "Out for Delivery",
+    icon: Bike,
+  },
+  {
+    title: "Delivered",
+    icon: PackageCheck,
+  },
+];
 
   const paymentMethod = useMemo(() => {
     switch (order.paymentMethod) {
@@ -142,17 +188,18 @@ export default function OrderDetailsPage() {
 
               <div className="flex items-center gap-4">
 
-                <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
 
-                  <CheckCircle2 className="h-9 w-9 text-green-600" />
+                  <CheckCircle2 className={`h-8 w-8 ${orderStatusColor[order.orderStatus]}`} />
 
                 </div>
 
                 <div>
-
-                  <p className="text-green-600 font-semibold">
-                    Order Confirmed
-                  </p>
+<p
+  className={`text-lg font-semibold ${orderStatusColor[order.orderStatus]}`}
+>
+  {orderStatusText[order.orderStatus]}
+</p>
 
                   <h1 className="text-3xl lg:text-4xl font-bold mt-1">
                     {order.restaurantName}
@@ -181,10 +228,11 @@ export default function OrderDetailsPage() {
                   <p className="text-sm text-muted-foreground">
                     Payment
                   </p>
-
-                  <p className="font-semibold text-lg capitalize">
-                    {order.paymentStatus}
-                  </p>
+<p
+  className={`font-semibold text-lg capitalize ${paymentColor[order.paymentStatus]}`}
+>
+  {order.paymentStatus.replace(/_/g, " ")}
+</p>
 
                 </div>
 
@@ -198,9 +246,9 @@ export default function OrderDetailsPage() {
                 Estimated Delivery
               </p>
 
-              <h2 className="text-3xl font-bold mt-2">
-                {order.estimatedDeliveryTime}
-              </h2>
+<h2 className="text-3xl font-bold mt-2">
+  {order.estimatedDeliveryTime || "30–40 mins"}
+</h2>
 
             </div>
 
@@ -212,9 +260,13 @@ export default function OrderDetailsPage() {
 
         <section className="mt-8 rounded-3xl border border-border bg-card p-8 shadow-sm">
 
-          <h2 className="text-2xl font-bold mb-8">
-            Order Progress
-          </h2>
+<h2 className="text-2xl font-bold mb-2">
+  Order Progress
+</h2>
+
+<p className="text-muted-foreground mb-8">
+  Track your order in real time.
+</p>
 
           <div className="space-y-7">
 
@@ -232,11 +284,11 @@ export default function OrderDetailsPage() {
                 >
 
                   <div
-                    className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all ${
-                      completed
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border text-muted-foreground"
-                    }`}
+className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all ${
+  completed
+    ? "bg-primary text-primary-foreground border-primary"
+    : "border-border text-muted-foreground"
+}`}
                   >
 
                     <Icon className="h-5 w-5" />
@@ -246,20 +298,18 @@ export default function OrderDetailsPage() {
                   <div>
 
                     <p
-                      className={`font-semibold ${
-                        completed
-                          ? "text-foreground"
-                          : "text-muted-foreground"
-                      }`}
+className={`font-semibold ${
+  completed
+    ? "text-foreground"
+    : "text-muted-foreground"
+}`}
                     >
                       {step.title}
                     </p>
 
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {completed
-                        ? "Completed"
-                        : "Waiting"}
-                    </p>
+<p className="text-sm text-muted-foreground mt-1">
+  {completed ? "Completed" : "Pending"}
+</p>
 
                   </div>
 
@@ -296,18 +346,19 @@ export default function OrderDetailsPage() {
 
               <div className="space-y-5">
 
-                {order.items.map((item) => (
+                {order.items.map((item, index) => (
 
                   <div
-                    key={item.menuItemId}
+                    key={`${item.menuItemId}-${index}`}
                     className="flex items-center gap-4 border-b border-border pb-5 last:border-none last:pb-0"
                   >
-
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="h-20 w-20 rounded-xl object-cover border"
-                    />
+<Image
+  src={item.image || "/images/food-placeholder.png"}
+  alt={item.name}
+  width={80}
+  height={80}
+  className="h-20 w-20 rounded-xl object-cover border"
+/>
 
                     <div className="flex-1">
 
@@ -315,18 +366,17 @@ export default function OrderDetailsPage() {
                         {item.name}
                       </h3>
 
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Qty : {item.quantity}
-                      </p>
+<p className="text-sm text-muted-foreground mt-1">
+  Quantity: {item.quantity}
+</p>
 
                     </div>
 
                     <div className="text-right">
 
-                      <p className="font-bold">
-                        ${item.totalPrice.toFixed(2)}
-                      </p>
-
+<p className="font-bold text-lg">
+  {formatPrice(item.totalPrice)}
+</p>
                     </div>
 
                   </div>
@@ -352,14 +402,13 @@ export default function OrderDetailsPage() {
               </div>
 
               <div className="space-y-2">
+<p className="font-semibold text-lg">
+  {order.userDetails.name}
+</p>
 
-                <p className="font-semibold">
-                  {order.userDetails.name}
-                </p>
-
-                <p className="text-muted-foreground">
-                  {order.deliveryAddress.fullAddress}
-                </p>
+<p className="text-muted-foreground leading-7">
+  {order.deliveryAddress.fullAddress}
+</p>
 
                 <p className="text-muted-foreground">
                   {order.deliveryAddress.street}
@@ -374,9 +423,9 @@ export default function OrderDetailsPage() {
                   {order.deliveryAddress.zipCode}
                 </p>
 
-                <p className="pt-3 font-medium">
-                  📞 {order.userDetails.phone}
-                </p>
+<p className="pt-3 font-medium">
+  Phone: {order.userDetails.phone}
+</p>    
 
               </div>
 
@@ -390,7 +439,7 @@ export default function OrderDetailsPage() {
 
             {/* Payment */}
 
-            <section className="rounded-3xl border border-border bg-card p-8 shadow-sm">
+            <section className="sticky top-28 rounded-3xl border border-border bg-card p-8 shadow-sm">
 
               <div className="flex items-center gap-3 mb-6">
 
@@ -422,9 +471,11 @@ export default function OrderDetailsPage() {
                     Status
                   </span>
 
-                  <span className="font-semibold capitalize text-green-600">
-                    {order.paymentStatus}
-                  </span>
+<span
+  className={`font-semibold capitalize ${paymentColor[order.paymentStatus]}`}
+>
+  {order.paymentStatus.replace(/_/g, " ")}
+</span>
 
                 </div>
 
@@ -436,9 +487,9 @@ export default function OrderDetailsPage() {
 
             <section className="rounded-3xl border border-border bg-card p-8 shadow-sm">
 
-              <h2 className="text-2xl font-bold mb-6">
-                Bill Summary
-              </h2>
+<h2 className="text-2xl font-bold mb-6">
+  Payment Summary
+</h2>
 
               <div className="space-y-4">
 
@@ -449,7 +500,7 @@ export default function OrderDetailsPage() {
                   </span>
 
                   <span>
-                    ${order.subtotal.toFixed(2)}
+                    {formatPrice(order.subtotal)}
                   </span>
 
                 </div>
@@ -461,7 +512,8 @@ export default function OrderDetailsPage() {
                   </span>
 
                   <span>
-                    ${order.deliveryFee.toFixed(2)}
+                    {formatPrice(order.deliveryFee)}
+
                   </span>
 
                 </div>
@@ -473,7 +525,7 @@ export default function OrderDetailsPage() {
                   </span>
 
                   <span>
-                    ${order.serviceFee.toFixed(2)}
+                    {formatPrice(order.serviceFee)}
                   </span>
 
                 </div>
@@ -485,33 +537,27 @@ export default function OrderDetailsPage() {
                   </span>
 
                   <span>
-                    ${order.tax.toFixed(2)}
+                    {formatPrice(order.tax)}
                   </span>
 
                 </div>
 
-                {order.discount > 0 && (
+{order.discount > 0 && (
+  <div className="flex justify-between text-green-600 font-medium">
+    <span>Discount</span>
+    <span>-{formatPrice(order.discount)}</span>
+  </div>
+)}
 
-                  <div className="flex justify-between text-green-600">
-
-                    <span>
-                      Discount
-                    </span>
-
-                    <span>
-                      -${order.discount.toFixed(2)}
-                    </span>
-
-                  </div>
-
-                )}
+                 
+              
 
                 <div className="border-t border-border pt-5 flex justify-between text-xl font-bold">
 
                   <span>Total</span>
 
                   <span>
-                    ${order.totalAmount.toFixed(2)}
+                    {formatPrice(order.totalAmount)}
                   </span>
 
                 </div>
