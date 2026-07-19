@@ -123,11 +123,13 @@ const handleTestOrder = async () => {
 const result = await createOrder(checkoutData);
 
 clearCart();
+clearCheckoutData();
 
 setOrderStage("redirecting");
 
 router.push(`/orders/${result.orderId}`);
 };
+
   return (
     <>
       <Navbar />
@@ -156,7 +158,13 @@ from-background
 to-primary/5
 "
 >
-<Button onClick={handleTestOrder}>
+<Button
+  onClick={async () => {
+    const result = await createOrder(checkoutData);
+
+    router.push(`/orders/${result.orderId}`);
+  }}
+>
   Test Order Flow
 </Button>
         <div className="mb-8">
@@ -848,27 +856,6 @@ justify-center
   Your food is being prepared.
 </p>
 
-            <Button
-              onClick={() => router.push("/")}
-              className="
-w-full
-h-14
-mt-6
-text-base
-font-bold
-rounded-2xl
-bg-primary
-shadow-lg
-shadow-primary/20
-hover:scale-[1.02]
-hover:shadow-xl
-hover:shadow-primary/30
-transition-all
-duration-300
-"
-            >
-              Back to Home
-          </Button>
 
         </motion.div>
 
@@ -896,9 +883,13 @@ onSuccess={async () => {
 
 const result = await createOrder(checkoutData);
 
+clearCart();
+clearCheckoutData();
+
 setOrderStage("redirecting");
 
 router.push(`/orders/${result.orderId}`);
+
   console.log(result);
 
 
