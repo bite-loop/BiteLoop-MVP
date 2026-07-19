@@ -124,6 +124,8 @@ const result = await createOrder(checkoutData);
 
 clearCart();
 
+clearCheckoutData();
+
 setOrderStage("redirecting");
 
 router.push(`/orders/${result.orderId}`);
