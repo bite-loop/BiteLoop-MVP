@@ -18,12 +18,16 @@ import Navbar from "@/components/navbar/navbar";
 import { db } from "@/lib/firebase/config";
 import type { Order, OrderStatus } from "@/types/order";
 import Image from "next/image";
+import { Timestamp } from "firebase/firestore";
+
 
 export default function OrderDetailsPage() {
   const { orderId } = useParams();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+const test = Timestamp.now();
+test.toDate();
 
 const formatPrice = (price:number)=>
 new Intl.NumberFormat("en-CA",{
