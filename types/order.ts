@@ -1,4 +1,4 @@
-import { Timestamp } from './common';
+import { Timestamp } from "firebase/firestore";
 import { Address } from './user';
 
 // ============ CART RELATED ============
@@ -67,7 +67,7 @@ export interface Order {
   orderStatus: OrderStatus;
   uberDeliveryId?: string; // Uber Eats delivery ID
   uberTrackingUrl?: string; // Uber Eats tracking URL
-  estimatedDeliveryTime: string;
+estimatedDeliveryTime: Timestamp;
   actualDeliveryTime?: Timestamp;
   specialInstructions?: string;
   timeline: OrderTimeline[];
