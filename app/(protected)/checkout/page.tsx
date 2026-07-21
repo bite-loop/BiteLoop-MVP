@@ -108,29 +108,37 @@ const selectedAddressData =
   const handleProceedToPayment = () => {
   if (!selectedAddressData) return;
 
-  setCheckoutData({
-    restaurantName: restaurantName || "Restaurant",
+setCheckoutData({
+  restaurantName: restaurantName || "Restaurant",
 
-    items: cartItems,
+  restaurantId: restaurantId || "",
 
-    address: selectedAddressData,
+userId: user?.id || "",
 
-    noContact,
+userDetails: {
+  name: user?.displayName || "",
+  email: user?.email || "",
+  phone: user?.phone || "",
+},
 
-    suggestions,
+  items: cartItems,
 
-    itemTotal,
+  address: selectedAddressData,
 
-    deliveryFee,
+  noContact,
 
-    serviceFee,
+  suggestions,
 
-    tax,
+  itemTotal,
 
-    total,
-    restaurantId: restaurantId || "",
-    
-  });
+  deliveryFee,
+
+  serviceFee,
+
+  tax,
+
+  total,
+});
 
   router.push("/payment");
 };

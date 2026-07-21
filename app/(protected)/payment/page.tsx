@@ -160,6 +160,8 @@ to-primary/5
 >
 <Button
   onClick={async () => {
+    if (!checkoutData) return;
+
     const result = await createOrder(checkoutData);
 
     router.push(`/orders/${result.orderId}`);

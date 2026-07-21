@@ -5,27 +5,31 @@ import type { CheckoutData } from "@/types/order";
 export async function createOrder(
   checkoutData: CheckoutData
 ) {
-  const order = {
-    restaurantId: checkoutData.restaurantId,
-    restaurantName: checkoutData.restaurantName,
+const order = {
+  restaurantId: checkoutData.restaurantId,
+  restaurantName: checkoutData.restaurantName,
 
-    items: checkoutData.items,
+  userId: checkoutData.userId,
 
-    subtotal: checkoutData.itemTotal,
-    deliveryFee: checkoutData.deliveryFee,
-    serviceFee: checkoutData.serviceFee,
-    tax: checkoutData.tax,
-    totalAmount: checkoutData.total,
+  userDetails: checkoutData.userDetails,
 
-    deliveryAddress: checkoutData.address,
+  items: checkoutData.items,
 
-    paymentMethod: "card",
-    paymentStatus: "completed",
-    orderStatus: "pending",
+  subtotal: checkoutData.itemTotal,
+  deliveryFee: checkoutData.deliveryFee,
+  serviceFee: checkoutData.serviceFee,
+  tax: checkoutData.tax,
+  totalAmount: checkoutData.total,
 
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  };
+  deliveryAddress: checkoutData.address,
+
+  paymentMethod: "card",
+  paymentStatus: "completed",
+  orderStatus: "pending",
+
+  createdAt: serverTimestamp(),
+  updatedAt: serverTimestamp(),
+};
 
   const docRef = await addDoc(
     collection(db, "orders"),

@@ -85,25 +85,7 @@ const orderStatusText: Record<OrderStatus, string> = {
     fetchOrder();
   }, [orderId]);
 
-  if (loading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold">
-          Loading Order...
-        </h2>
-      </main>
-    );
-  }
 
-  if (!order) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold">
-          Order Not Found
-        </h2>
-      </main>
-    );
-  }
 
 const statusSteps: OrderStatus[] = [
   "pending",
@@ -114,10 +96,11 @@ const statusSteps: OrderStatus[] = [
   "in_transit",
   "delivered",
 ];
-  const currentStep = Math.max(
-    statusSteps.indexOf(order.orderStatus),
-    0
-  );
+
+const currentStep = Math.max(
+  statusSteps.indexOf(order?.orderStatus ?? "pending"),
+  0
+);
 
 const timeline = [
   {
@@ -150,28 +133,44 @@ const timeline = [
   },
 ];
 
-  const paymentMethod = useMemo(() => {
-    switch (order.paymentMethod) {
-      case "card":
-        return "Card";
+const paymentMethod = useMemo(() => {
+  if (!order) return "";
 
-      case "upi":
-        return "UPI";
+  switch (order.paymentMethod) {
+    case "card":
+      return "Card";
+    case "upi":
+      return "UPI";
+    case "wallet":
+      return "Wallet";
+    case "cash":
+      return "Cash";
+    case "netbanking":
+      return "Net Banking";
+    default:
+      return order.paymentMethod;
+  }
+}, [order]);
 
-      case "wallet":
-        return "Wallet";
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <h2 className="text-xl font-semibold">
+          Loading Order...
+        </h2>
+      </main>
+    );
+  }
 
-      case "cash":
-        return "Cash";
-
-      case "netbanking":
-        return "Net Banking";
-
-      default:
-        return order.paymentMethod;
-    }
-  }, [order.paymentMethod]);
-
+  if (!order) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <h2 className="text-xl font-semibold">
+          Order Not Found
+        </h2>
+      </main>
+    );
+  }
   return (
     <>
       <Navbar />
