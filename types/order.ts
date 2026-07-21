@@ -1,4 +1,4 @@
-import { Timestamp } from './common';
+import { Timestamp } from "firebase/firestore";
 import { Address } from './user';
 
 // ============ CART RELATED ============
@@ -67,7 +67,7 @@ export interface Order {
   orderStatus: OrderStatus;
   uberDeliveryId?: string; // Uber Eats delivery ID
   uberTrackingUrl?: string; // Uber Eats tracking URL
-  estimatedDeliveryTime: string;
+estimatedDeliveryTime: Timestamp;
   actualDeliveryTime?: Timestamp;
   specialInstructions?: string;
   timeline: OrderTimeline[];
@@ -122,6 +122,14 @@ export interface CheckoutData {
   restaurantId: string;
   restaurantName: string;
 
+  userId: string;
+
+  userDetails: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+
   items: CartItem[];
 
   address: Address | null;
@@ -136,7 +144,6 @@ export interface CheckoutData {
 
   total: number;
 }
-
 // ============ COUPONS & DISCOUNTS ============
 export interface Coupon {
   id: string;
