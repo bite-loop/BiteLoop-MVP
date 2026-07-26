@@ -1,4 +1,5 @@
-import { Timestamp } from './common';
+// ✅ New
+import { Timestamp } from "./common";
 // future dine feature
 // ============ RESTAURANT RELATED ============
 export interface Restaurant {
