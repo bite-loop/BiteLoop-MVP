@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "./common";
 import { Address } from './user';
 
 // ============ CART RELATED ============

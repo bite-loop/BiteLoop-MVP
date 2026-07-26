@@ -250,10 +250,12 @@ const paymentMethod = useMemo(() => {
               </p>
 
 <h2 className="text-3xl font-bold mt-2">
-  {order.estimatedDeliveryTime.toDate().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  })}
+{new Date(
+  order.estimatedDeliveryTime.seconds * 1000
+).toLocaleTimeString([], {
+  hour: "2-digit",
+  minute: "2-digit",
+})}
 </h2>
 
             </div>

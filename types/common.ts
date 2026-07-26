@@ -1,4 +1,8 @@
 
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
 
 // ============ API RESPONSE TYPES ============
 export interface APIResponse<T> {

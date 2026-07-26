@@ -1,5 +1,5 @@
-import { Timestamp } from './common';
-
+// ✅ New
+import { Timestamp } from "./common";
 // ============ USER RELATED ============
 export interface UserProfile {
   id: string;
